@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "webpack --mode development",
     "watch": "webpack --watch",
-    "start": "webpack serve --open",
+    "start": "webpack serve --port 4000 --open",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Damian Baćkowski",

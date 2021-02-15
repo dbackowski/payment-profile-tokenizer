@@ -24,6 +24,9 @@ class Main extends IframesMessages {
 
     if (this.validateFields()) {
       console.log('here we will send data to the backend');
+      console.log(this.fieldsValues);
+    } else {
+      console.log('not all fields were filled in');
     }
 
     this.fieldsValues = {};

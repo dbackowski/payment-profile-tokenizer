@@ -1,7 +1,6 @@
-import { IframesMessages } from '../helpers/IframeMessages';
+import { IframesMessages, IframeOrigin } from '../helpers/IframeMessages';
 
 class Client extends IframesMessages {
-  frameHost = 'http://localhost:8080';
   options = {};
   iframes = {};
   receivedMessageToMethod = {
@@ -27,7 +26,7 @@ class Client extends IframesMessages {
   }
 
   tokenize() {
-    this.sendMessageToIframes({ action: 'SEND_DATA_TO_MAIN_IFRAME' });
+    this.sendMessageToIframes({ action: 'SEND_FIELD_VALUE_TO_MAIN_IFRAME' });
   }
 
   validateOptions() {
@@ -70,7 +69,7 @@ class Client extends IframesMessages {
   }
 
   srcForIframe(fieldName) {
-    return fieldName === "mainIframe" ? `${this.frameHost}/dist/main.html` : `${this.frameHost}/dist/field.html`;
+    return fieldName === "mainIframe" ? `${IframeOrigin}/dist/main.html` : `${IframeOrigin}/dist/field.html`;
   }
 
   elementToAppendIframeTo(fieldName) {

@@ -1,4 +1,4 @@
-import { IframesMessages } from '../helpers/IframeMessages';
+import { IframesMessages, IframeOrigin } from '../helpers/IframeMessages';
 
 class Field extends IframesMessages {
   options = {};
@@ -6,7 +6,7 @@ class Field extends IframesMessages {
 
   receivedMessageToMethod = {
     'SET_OPTIONS': { method: this.setOptions, skipOriginCheck: true },
-    'SEND_DATA_TO_MAIN_IFRAME': { method: this.sendDataToMainIframe },
+    'SEND_FIELD_VALUE_TO_MAIN_IFRAME': { method: this.sendFieldValueToMainIframe },
   };
 
   createField() {
@@ -34,10 +34,9 @@ class Field extends IframesMessages {
     window.top.postMessage(message, '*');
   }
 
-  sendDataToMainIframe() {
+  sendFieldValueToMainIframe() {
     const mainIframe = window.top.frames['mainIframe'];
-
-    // add check for mainFrame origin here
+    if (mainIframe.origin !== IframeOrigin) return;
 
     const value = document.querySelector('input').value;
     const message = {

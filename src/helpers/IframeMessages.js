@@ -1,4 +1,4 @@
-const IframeOrigin = 'http://localhost:8080';
+export const IframeOrigin = 'http://localhost:4000';
 
 export class IframesMessages {
   /*
