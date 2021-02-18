@@ -1,12 +1,12 @@
 import { IframesMessages, IframeOrigin } from '../helpers/IframeMessages';
-
+import { Client } from '../client';
 class Field extends IframesMessages {
   options = {};
   fieldsValues = {};
 
   receivedMessageToMethod = {
     'SET_OPTIONS': { method: this.setOptions, skipOriginCheck: true },
-    'SEND_FIELD_VALUE_TO_MAIN_IFRAME': { method: this.sendFieldValueToMainIframe },
+    'SEND_FIELD_VALUE_TO_MAIN_IFRAME': { method: this.sendFieldValueToMainIframe, skipOriginCheck: true },
   };
 
   createField() {
@@ -35,7 +35,7 @@ class Field extends IframesMessages {
   }
 
   sendFieldValueToMainIframe() {
-    const mainIframe = window.top.frames['mainIframe'];
+    const mainIframe = window.top.frames[Client.mainIframeName];
     if (mainIframe.origin !== IframeOrigin) return;
 
     const value = document.querySelector('input').value;
@@ -47,7 +47,7 @@ class Field extends IframesMessages {
       },
     };
 
-    mainIframe.postMessage(message, '*');
+    mainIframe.postMessage(message, IframeOrigin);
   }
 }
 

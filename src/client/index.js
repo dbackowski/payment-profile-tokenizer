@@ -1,6 +1,7 @@
 import { IframesMessages, IframeOrigin } from '../helpers/IframeMessages';
 
-class Client extends IframesMessages {
+export class Client extends IframesMessages {
+  static mainIframeName = 'mainIframe';
   options = {};
   iframes = {};
   receivedMessageToMethod = {
@@ -15,14 +16,8 @@ class Client extends IframesMessages {
   async create() {
     if (!this.validateOptions()) return
 
-    this.startListeningOnMessages();
-    this.createMainIframe();
-
-    try {
-      await this.createFields();
-    } catch (err) {
-      console.log(err);
-    }
+    await this.createMainIframe();
+    await this.createFields();
   }
 
   tokenize() {
@@ -57,23 +52,19 @@ class Client extends IframesMessages {
       display: 'none',
     };
 
-    await this.createIframe('mainIframe', styles);
+    await this.createIframe(Client.mainIframeName, styles);
   }
 
   optionsForIframe(fieldName) {
-    if (fieldName === 'mainIframe') {
-      return { fields: this.options.fields };
-    } else {
-      return { fieldName: fieldName };
-    }
+    return fieldName === Client.mainIframeName ? { fields: this.options.fields } : { fieldName: fieldName };
   }
 
   srcForIframe(fieldName) {
-    return fieldName === "mainIframe" ? `${IframeOrigin}/dist/main.html` : `${IframeOrigin}/dist/field.html`;
+    return fieldName === Client.mainIframeName ? `${IframeOrigin}/dist/main.html` : `${IframeOrigin}/dist/field.html`;
   }
 
   elementToAppendIframeTo(fieldName) {
-    return fieldName === 'mainIframe' ? document.body : document.querySelector(this.options.fields[fieldName]['selector']);
+    return fieldName === Client.mainIframeName ? document.body : document.querySelector(this.options.fields[fieldName]['selector']);
   }
 
   createIframe(fieldName, styles = {}) {
@@ -102,11 +93,11 @@ class Client extends IframesMessages {
   }
 
   sendMessageToIframe(name, message) {
-    this.iframes[name].contentWindow.postMessage(message, '*');
+    this.iframes[name].contentWindow.postMessage(message, IframeOrigin);
   }
 
   sendMessageToIframes(message) {
-    Object.keys(this.iframes).filter(fieldName => fieldName !== "mainIframe").forEach(fieldName => {
+    Object.keys(this.iframes).filter(fieldName => fieldName !== Client.mainIframeName).forEach(fieldName => {
       this.sendMessageToIframe(fieldName, message);
     })
   }
