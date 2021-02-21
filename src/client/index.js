@@ -56,7 +56,7 @@ export class Client extends IframesMessages {
   }
 
   optionsForIframe(fieldName) {
-    return fieldName === Client.mainIframeName ? { fields: this.options.fields } : { fieldName: fieldName };
+    return fieldName === Client.mainIframeName ? { fields: this.options.fields } : { [fieldName]: this.options.fields[fieldName] };
   }
 
   srcForIframe(fieldName) {

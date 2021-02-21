@@ -9,15 +9,24 @@ class Field extends IframesMessages {
     'SEND_FIELD_VALUE_TO_MAIN_IFRAME': { method: this.sendFieldValueToMainIframe, skipOriginCheck: true },
   };
 
+  fieldName() {
+    return Object.keys(this.options)[0];
+  }
+
+  setStylesOnElement(element, styles) {
+    Object.assign(element.style, styles);
+  }
+
   createField() {
     const input = document.createElement('input');
-    input.name = this.options.fieldName;
+    input.name = this.fieldName();
+    this.setStylesOnElement(input, this.options[this.fieldName()].style);
     document.body.appendChild(input);
 
     this.sendMessageToClient({
       action: "INPUT_SIZE",
       data: {
-        fieldName: this.options.fieldName,
+        fieldName: this.fieldName(),
         width:input.clientWidth,
         height: input.clientHeight,
       }
@@ -42,7 +51,7 @@ class Field extends IframesMessages {
     const message = {
       action: 'FIELD_VALUE',
       data: {
-        fieldName: this.options.fieldName,
+        fieldName: this.fieldName(),
         value: value
       },
     };
