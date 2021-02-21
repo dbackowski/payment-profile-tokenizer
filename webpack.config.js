@@ -4,8 +4,8 @@ module.exports = {
   mode: "development",
   entry: {
     client: ['./src/client/index.js'],
-    field: ['./src/server/field.js'],
-    main: ['./src/server/main.js'],
+    field: ['./src/field_iframe/field.js'],
+    main: ['./src/main_iframe/main.js'],
   },
   output: {
     filename: '[name].js',
@@ -23,8 +23,8 @@ module.exports = {
   plugins: [
     new CopyPlugin({
       patterns: [
-        path.resolve(__dirname, "src", "server", "field.html"),
-        path.resolve(__dirname, "src", "server", "main.html"),
+        path.resolve(__dirname, "src", "field_iframe", "field.html"),
+        path.resolve(__dirname, "src", "main_iframe", "main.html"),
       ],
     }),
   ],

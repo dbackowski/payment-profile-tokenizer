@@ -1,5 +1,5 @@
-import { IframesMessages, IframeOrigin } from '../helpers/IframeMessages';
-
+import { IframesMessages, IframeOrigin } from '../shared/IframeMessages';
+import { setStylesOnElement } from '../shared/helpers';
 export class Client extends IframesMessages {
   static mainIframeName = 'mainIframe';
   options = {};
@@ -76,7 +76,7 @@ export class Client extends IframesMessages {
       iframe.src = src;
       iframe.id = fieldName;
       iframe.name = fieldName;
-      this.setStylesOnElement(iframe, styles);
+      setStylesOnElement(iframe, styles);
 
       iframe.onload = () => {
         this.sendMessageToIframe(fieldName, { action: 'SET_OPTIONS', data: data });
@@ -86,10 +86,6 @@ export class Client extends IframesMessages {
       this.elementToAppendIframeTo(fieldName).appendChild(iframe);
       this.iframes[fieldName] = iframe;
     });
-  }
-
-  setStylesOnElement(element, styles) {
-    Object.assign(element.style, styles);
   }
 
   sendMessageToIframe(name, message) {
@@ -109,7 +105,7 @@ export class Client extends IframesMessages {
       height: message.data.height + 23 + 'px',
     }
 
-    this.setStylesOnElement(iframe, styles);
+    setStylesOnElement(iframe, styles);
   }
 };
 

@@ -1,5 +1,7 @@
-import { IframesMessages, IframeOrigin } from '../helpers/IframeMessages';
+import { IframesMessages, IframeOrigin } from '../shared/IframeMessages';
 import { Client } from '../client';
+import { setStylesOnElement } from '../shared/helpers';
+
 class Field extends IframesMessages {
   options = {};
   fieldsValues = {};
@@ -13,14 +15,10 @@ class Field extends IframesMessages {
     return Object.keys(this.options)[0];
   }
 
-  setStylesOnElement(element, styles) {
-    Object.assign(element.style, styles);
-  }
-
   createField() {
     const input = document.createElement('input');
     input.name = this.fieldName();
-    this.setStylesOnElement(input, this.options[this.fieldName()].style);
+    setStylesOnElement(input, this.options[this.fieldName()].style);
     document.body.appendChild(input);
 
     this.sendMessageToClient({
