@@ -100,9 +100,10 @@ export class Client extends IframesMessages {
 
   setIframeSize(message) {
     const iframe = this.iframes[message.data.fieldName];
+
     const styles = {
-      width: message.data.width + 20 + 'px',
-      height: message.data.height + 23 + 'px',
+      width: message.data.width + 4 + 'px',
+      height: message.data.height + 4 + 'px',
     }
 
     setStylesOnElement(iframe, styles);

@@ -15,18 +15,22 @@ class Field extends IframesMessages {
     return Object.keys(this.options)[0];
   }
 
+  getFieldStyle() {
+    return this.options[this.fieldName()].style;
+  }
+
   createField() {
     const input = document.createElement('input');
     input.name = this.fieldName();
-    setStylesOnElement(input, this.options[this.fieldName()].style);
+    setStylesOnElement(input, this.getFieldStyle());
     document.body.appendChild(input);
 
     this.sendMessageToClient({
       action: "INPUT_SIZE",
       data: {
         fieldName: this.fieldName(),
-        width:input.clientWidth,
-        height: input.clientHeight,
+        width:input.offsetWidth,
+        height: input.offsetHeight,
       }
     })
   }
