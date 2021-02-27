@@ -76,6 +76,7 @@ export class Client extends IframesMessages {
       iframe.src = src;
       iframe.id = fieldName;
       iframe.name = fieldName;
+      iframe.sandbox = 'allow-scripts allow-same-origin';
       setStylesOnElement(iframe, styles);
 
       iframe.onload = () => {

@@ -12,10 +12,10 @@
     <script>
       var options = {
         fields: {
-          firstName: { selector: '#first-name' },
-          lastName: { selector: '#last-name' },
-          creditCardNumber: { selector: '#credit-card-number' },
-          cvv: { selector: '#cvv' },
+          firstName: { selector: '#first-name', label: 'First Name' },
+          lastName: { selector: '#last-name', label: 'Last Name' },
+          creditCardNumber: { selector: '#credit-card-number', label: 'Card Number' },
+          cvv: { selector: '#cvv', label: 'CVC' },
         }
       };
       var lib = new Client(options);
