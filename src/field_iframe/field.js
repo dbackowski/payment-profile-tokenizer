@@ -32,7 +32,7 @@ class Field extends IframesMessages {
   }
 
   createField() {
-    const div = document.createElement('span');
+    const span = document.createElement('span');
     const label = document.createElement('label');
     const input = document.createElement('input');
 
@@ -44,12 +44,12 @@ class Field extends IframesMessages {
     label.innerText = this.getFieldLabel();
     setStylesOnElement(label, this.getLabelStyle());
 
-    div.appendChild(label)
-    div.appendChild(input);
+    span.appendChild(label)
+    span.appendChild(input);
 
-    document.body.appendChild(div);
+    document.body.appendChild(span);
 
-    this.sendInputSizeToClient(div);
+    this.sendInputSizeToClient(span);
   }
 
   sendInputSizeToClient(input) {

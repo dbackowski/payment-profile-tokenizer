@@ -1,5 +1,6 @@
 import { IframesMessages, IframeOrigin } from '../shared/IframeMessages';
-import { setStylesOnElement } from '../shared/helpers';
+import { setStylesOnElement, createIframe } from '../shared/helpers';
+
 export class Client extends IframesMessages {
   static mainIframeName = 'mainIframe';
   options = {};
@@ -30,63 +31,62 @@ export class Client extends IframesMessages {
   }
 
   createFields() {
-    const iframes = [];
-    const styles = {
+    const promises = [];
+
+    Object.keys(this.options.fields).forEach(fieldName => {
+      promises.push(createIframe(this.optionsForIframe(fieldName)));
+    });
+
+    return Promise.all(promises);
+  }
+
+  async createMainIframe() {
+    await createIframe(this.optionsForIframe(Client.mainIframeName));
+  }
+
+  stylesForIframe(fieldName) {
+    if (this.fieldNameIsMainIframe(fieldName)) {
+      return {
+        display: 'none',
+      };
+    }
+
+    return {
       border: '0px',
       margin: '0px',
       padding: '0px',
       width: 0,
       height: 0,
-    }
-
-    Object.entries(this.options.fields).forEach(field => {
-      const [name, fieldOptions] = field;
-      iframes.push(this.createIframe(name, styles));
-    });
-
-    return Promise.all(iframes);
-  }
-
-  async createMainIframe() {
-    const styles = {
-      display: 'none',
     };
-
-    await this.createIframe(Client.mainIframeName, styles);
   }
 
   optionsForIframe(fieldName) {
-    return fieldName === Client.mainIframeName ? { fields: this.options.fields } : { [fieldName]: this.options.fields[fieldName] };
+    return {
+      fieldName: fieldName,
+      elementToAppendIframeTo: this.elementToAppendIframeTo(fieldName),
+      src:this.srcForIframe(fieldName),
+      onLoadCallback: (iframe) => {
+        this.iframes[fieldName] = iframe;
+        this.sendMessageToIframe(fieldName, { action: 'SET_OPTIONS', data: this.dataForIframe(fieldName) })
+      },
+      styles: this.stylesForIframe(fieldName),
+    };
+  }
+
+  fieldNameIsMainIframe(fieldName) {
+    return fieldName === Client.mainIframeName
+  }
+
+  dataForIframe(fieldName) {
+    return this.fieldNameIsMainIframe(fieldName) ? { fields: this.options.fields } : { [fieldName]: this.options.fields[fieldName] };
   }
 
   srcForIframe(fieldName) {
-    return fieldName === Client.mainIframeName ? `${IframeOrigin}/dist/main.html` : `${IframeOrigin}/dist/field.html`;
+    return this.fieldNameIsMainIframe(fieldName) ? `${IframeOrigin}/dist/main.html` : `${IframeOrigin}/dist/field.html`;
   }
 
   elementToAppendIframeTo(fieldName) {
-    return fieldName === Client.mainIframeName ? document.body : document.querySelector(this.options.fields[fieldName]['selector']);
-  }
-
-  createIframe(fieldName, styles = {}) {
-    return new Promise((resolve, reject) => {
-      const iframe = document.createElement('iframe');
-      const data = this.optionsForIframe(fieldName);
-      const src = this.srcForIframe(fieldName);
-
-      iframe.src = src;
-      iframe.id = fieldName;
-      iframe.name = fieldName;
-      iframe.sandbox = 'allow-scripts allow-same-origin';
-      setStylesOnElement(iframe, styles);
-
-      iframe.onload = () => {
-        this.sendMessageToIframe(fieldName, { action: 'SET_OPTIONS', data: data });
-        resolve();
-      }
-
-      this.elementToAppendIframeTo(fieldName).appendChild(iframe);
-      this.iframes[fieldName] = iframe;
-    });
+    return this.fieldNameIsMainIframe(fieldName) ? document.body : document.querySelector(this.options.fields[fieldName]['selector']);
   }
 
   sendMessageToIframe(name, message) {
