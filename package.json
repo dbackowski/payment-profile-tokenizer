@@ -7,12 +7,14 @@
     "dev": "webpack --mode development",
     "watch": "webpack --watch",
     "start": "webpack serve --port 4000 --open",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
   },
   "author": "Damian Baćkowski",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.12.10",
+    "@babel/eslint-parser": "^7.13.8",
     "@babel/plugin-proposal-class-properties": "^7.12.13",
     "@babel/plugin-transform-runtime": "^7.12.15",
     "@babel/preset-env": "^7.12.11",
@@ -20,6 +22,9 @@
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-runtime": "^6.23.0",
     "copy-webpack-plugin": "^7.0.0",
+    "eslint": "^7.21.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
     "webpack": "^5.19.0",
     "webpack-cli": "^4.4.0",
     "webpack-dev-server": "^3.11.2"
