@@ -34,28 +34,27 @@ export class IframesMessages {
     const { method, skipOriginCheck } = this.methodForReceivedMessage(message.data);
 
     if (method == null) return;
-    if (!this.validOriginMessage(message, skipOriginCheck)) return;
+    if (!this.constructor.validOriginMessage(message, skipOriginCheck)) return;
 
     method.call(this, message.data);
   }
 
   methodForReceivedMessage(message) {
-    if (this.checkIfMethodExistForReceivedMessage(message)) {
+    if (!this.checkIfMethodExistForReceivedMessage(message)) return {};
 
-      return this.receivedMessageToMethod[message.action];
-    }
+    return this.receivedMessageToMethod[message.action];
   }
 
   checkIfMethodExistForReceivedMessage(message) {
     if (message.action == null) return false;
 
-    return this.receivedMessageToMethod.hasOwnProperty(message.action) &&
-      this.receivedMessageToMethod[message.action].hasOwnProperty('method');
+    return this.receivedMessageToMethod[message.action]
+      && this.receivedMessageToMethod[message.action].method;
   }
 
-  validOriginMessage(message, skipOriginCheck) {
+  static validOriginMessage(message, skipOriginCheck) {
     if (skipOriginCheck) return true;
 
     return message.origin === IframeOrigin;
   }
-};
+}

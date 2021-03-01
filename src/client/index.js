@@ -18,7 +18,7 @@ export default class Client extends IframesMessages {
   }
 
   async create() {
-    if (!this.validateOptions()) return
+    if (!Client.validateOptions()) return;
 
     await this.createMainIframe();
     await this.createFields();
@@ -28,7 +28,7 @@ export default class Client extends IframesMessages {
     this.sendMessageToIframes({ action: 'SEND_FIELD_VALUE_TO_MAIN_IFRAME' });
   }
 
-  validateOptions() {
+  static validateOptions() {
     // for now it will always returns true
     return true;
   }
@@ -36,7 +36,7 @@ export default class Client extends IframesMessages {
   createFields() {
     const promises = [];
 
-    Object.keys(this.options.fields).forEach(fieldName => {
+    Object.keys(this.options.fields).forEach((fieldName) => {
       promises.push(createIframe(this.optionsForIframe(fieldName)));
     });
 
@@ -47,8 +47,8 @@ export default class Client extends IframesMessages {
     await createIframe(this.optionsForIframe(Client.mainIframeName));
   }
 
-  stylesForIframe(fieldName) {
-    if (this.fieldNameIsMainIframe(fieldName)) {
+  static stylesForIframe(fieldName) {
+    if (Client.fieldNameIsMainIframe(fieldName)) {
       return {
         display: 'none',
       };
@@ -67,33 +67,33 @@ export default class Client extends IframesMessages {
     return {
       fieldName,
       elementToAppendIframeTo: this.elementToAppendIframeTo(fieldName),
-      src: this.srcForIframe(fieldName),
+      src: Client.srcForIframe(fieldName),
       onLoadCallback: (iframe) => {
         this.iframes[fieldName] = iframe;
-        this.sendMessageToIframe(fieldName, { action: 'SET_OPTIONS', data: this.dataForIframe(fieldName) })
+        this.sendMessageToIframe(fieldName, { action: 'SET_OPTIONS', data: this.dataForIframe(fieldName) });
       },
-      styles: this.stylesForIframe(fieldName),
+      styles: Client.stylesForIframe(fieldName),
     };
   }
 
-  fieldNameIsMainIframe(fieldName) {
-    return fieldName === Client.mainIframeName
+  static fieldNameIsMainIframe(fieldName) {
+    return fieldName === Client.mainIframeName;
   }
 
   dataForIframe(fieldName) {
-    return this.fieldNameIsMainIframe(fieldName)
+    return Client.fieldNameIsMainIframe(fieldName)
       ? { fields: this.options.fields }
       : { [fieldName]: this.options.fields[fieldName] };
   }
 
-  srcForIframe(fieldName) {
-    return this.fieldNameIsMainIframe(fieldName)
+  static srcForIframe(fieldName) {
+    return Client.fieldNameIsMainIframe(fieldName)
       ? `${IframeOrigin}/dist/main.html`
       : `${IframeOrigin}/dist/field.html`;
   }
 
   elementToAppendIframeTo(fieldName) {
-    return this.fieldNameIsMainIframe(fieldName)
+    return Client.fieldNameIsMainIframe(fieldName)
       ? document.body
       : document.querySelector(this.options.fields[fieldName].selector);
   }

@@ -31,7 +31,7 @@ class Field extends IframesMessages {
   }
 
   getLabelStyle() {
-    return this.getStyle()?.label
+    return this.getStyle()?.label;
   }
 
   getFieldLabel() {
@@ -45,7 +45,7 @@ class Field extends IframesMessages {
       styles: {
         field: this.getFieldStyle(),
         label: this.getLabelStyle(),
-      }
+      },
     };
   }
 
@@ -58,7 +58,7 @@ class Field extends IframesMessages {
   }
 
   sendInputSizeToClient(input) {
-    this.sendMessageToClient({
+    Field.sendMessageToClient({
       action: 'INPUT_SIZE',
       data: {
         fieldName: this.fieldName(),
@@ -74,7 +74,7 @@ class Field extends IframesMessages {
     this.createField();
   }
 
-  sendMessageToClient(message) {
+  static sendMessageToClient(message) {
     window.top.postMessage(message, '*');
   }
 

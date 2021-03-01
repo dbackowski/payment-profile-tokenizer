@@ -14,20 +14,16 @@ class Main extends IframesMessages {
     this.options = message.data;
   }
 
-  sendMessageToClient(message) {
-    window.top.postMessage(message, '*');
-  }
-
   receivedFieldValue(message) {
     this.fieldsValues[message.data.fieldName] = message.data.value;
 
     if (!this.receivedValuesForAllFields()) return;
 
     if (this.validateFields()) {
-      console.log('here we will send data to the backend');
-      console.log(this.fieldsValues);
+      console.log('here we will send data to the backend'); // eslint-disable-line no-console
+      console.log(this.fieldsValues); // eslint-disable-line no-console
     } else {
-      console.log('not all fields were filled in');
+      console.log('not all fields were filled in'); // eslint-disable-line no-console
     }
 
     this.fieldsValues = {};
