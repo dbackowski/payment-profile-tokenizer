@@ -1,7 +1,6 @@
 import { IframesMessages, IframeOrigin } from '../shared/IframeMessages';
 import { Client } from '../client';
-import { setStylesOnElement } from '../shared/helpers';
-
+import { inputHtmlGenerator } from '../shared/inputHtmlGenerator';
 class Field extends IframesMessages {
   options = {};
   fieldsValues = {};
@@ -31,25 +30,23 @@ class Field extends IframesMessages {
     return this.options[this.fieldName()].label;
   }
 
+  optionsForHtmlGenerator() {
+    return {
+      fieldLabel: this.getFieldLabel(),
+      type: 'text',
+      styles: {
+        field: this.getFieldStyle(),
+        label: this.getLabelStyle(),
+      }
+    };
+  }
+
   createField() {
-    const span = document.createElement('span');
-    const label = document.createElement('label');
-    const input = document.createElement('input');
+    const html = new inputHtmlGenerator(this.fieldName(), 'text', this.optionsForHtmlGenerator());
+    const elem = html.output();
 
-    input.name = this.fieldName();
-    input.className = 'input';
-    setStylesOnElement(input, this.getFieldStyle());
-
-    label.setAttribute('for', input.name);
-    label.innerText = this.getFieldLabel();
-    setStylesOnElement(label, this.getLabelStyle());
-
-    span.appendChild(label)
-    span.appendChild(input);
-
-    document.body.appendChild(span);
-
-    this.sendInputSizeToClient(span);
+    document.body.appendChild(elem);
+    this.sendInputSizeToClient(elem);
   }
 
   sendInputSizeToClient(input) {
