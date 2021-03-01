@@ -1,11 +1,13 @@
-import { setStylesOnElement } from '../shared/helpers';
+import { setStylesOnElement } from './helpers';
 
-export class inputHtmlGenerator {
+export default class InputHtmlGenerator {
   fieldName;
+
   type;
+
   options = {};
 
-  constructor(fieldName, type, options = {}){
+  constructor(fieldName, type, options = {}) {
     this.fieldName = fieldName;
     this.type = type;
     this.options = options;
@@ -24,7 +26,7 @@ export class inputHtmlGenerator {
     label.innerText = this.options.fieldLabel;
     setStylesOnElement(label, this.options.styles.label);
 
-    span.appendChild(label)
+    span.appendChild(label);
     span.appendChild(input);
 
     return span;

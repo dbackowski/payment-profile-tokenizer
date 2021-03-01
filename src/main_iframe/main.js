@@ -2,11 +2,12 @@ import { IframesMessages } from '../shared/IframeMessages';
 
 class Main extends IframesMessages {
   options = {}
+
   fieldsValues = {};
 
   receivedMessageToMethod = {
-    'SET_OPTIONS': { method: this.setOptions, skipOriginCheck: true },
-    'FIELD_VALUE': { method: this.receivedFieldValue },
+    SET_OPTIONS: { method: this.setOptions, skipOriginCheck: true },
+    FIELD_VALUE: { method: this.receivedFieldValue },
   };
 
   setOptions(message) {
@@ -37,7 +38,7 @@ class Main extends IframesMessages {
   }
 
   validateFields() {
-    return Object.keys(this.fieldsValues).every(fieldNmae => this.fieldsValues[fieldNmae] !== '');
+    return Object.keys(this.fieldsValues).every((fieldNmae) => this.fieldsValues[fieldNmae] !== '');
   }
 }
 

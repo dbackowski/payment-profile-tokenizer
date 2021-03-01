@@ -1,13 +1,21 @@
 import { IframesMessages, IframeOrigin } from '../shared/IframeMessages';
-import { Client } from '../client';
-import { inputHtmlGenerator } from '../shared/inputHtmlGenerator';
+import Client from '../client';
+import InputHtmlGenerator from '../shared/inputHtmlGenerator';
+
 class Field extends IframesMessages {
   options = {};
+
   fieldsValues = {};
 
   receivedMessageToMethod = {
-    'SET_OPTIONS': { method: this.setOptions, skipOriginCheck: true },
-    'SEND_FIELD_VALUE_TO_MAIN_IFRAME': { method: this.sendFieldValueToMainIframe, skipOriginCheck: true },
+    SET_OPTIONS: {
+      method: this.setOptions,
+      skipOriginCheck: true,
+    },
+    SEND_FIELD_VALUE_TO_MAIN_IFRAME: {
+      method: this.sendFieldValueToMainIframe,
+      skipOriginCheck: true,
+    },
   };
 
   fieldName() {
@@ -42,7 +50,7 @@ class Field extends IframesMessages {
   }
 
   createField() {
-    const html = new inputHtmlGenerator(this.fieldName(), 'text', this.optionsForHtmlGenerator());
+    const html = new InputHtmlGenerator(this.fieldName(), 'text', this.optionsForHtmlGenerator());
     const elem = html.output();
 
     document.body.appendChild(elem);
@@ -51,13 +59,13 @@ class Field extends IframesMessages {
 
   sendInputSizeToClient(input) {
     this.sendMessageToClient({
-      action: "INPUT_SIZE",
+      action: 'INPUT_SIZE',
       data: {
         fieldName: this.fieldName(),
         width: input.offsetWidth,
         height: input.offsetHeight,
-      }
-    })
+      },
+    });
   }
 
   setOptions(message) {
@@ -74,12 +82,12 @@ class Field extends IframesMessages {
     const mainIframe = window.top.frames[Client.mainIframeName];
     if (mainIframe.origin !== IframeOrigin) return;
 
-    const value = document.querySelector('input').value;
+    const { value } = document.querySelector('input');
     const message = {
       action: 'FIELD_VALUE',
       data: {
         fieldName: this.fieldName(),
-        value: value
+        value,
       },
     };
 

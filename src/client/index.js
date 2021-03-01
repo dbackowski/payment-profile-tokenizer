@@ -1,12 +1,15 @@
 import { IframesMessages, IframeOrigin } from '../shared/IframeMessages';
 import { setStylesOnElement, createIframe } from '../shared/helpers';
 
-export class Client extends IframesMessages {
+export default class Client extends IframesMessages {
   static mainIframeName = 'mainIframe';
+
   options = {};
+
   iframes = {};
+
   receivedMessageToMethod = {
-    'INPUT_SIZE': { method: this.setIframeSize },
+    INPUT_SIZE: { method: this.setIframeSize },
   };
 
   constructor(options) {
@@ -62,9 +65,9 @@ export class Client extends IframesMessages {
 
   optionsForIframe(fieldName) {
     return {
-      fieldName: fieldName,
+      fieldName,
       elementToAppendIframeTo: this.elementToAppendIframeTo(fieldName),
-      src:this.srcForIframe(fieldName),
+      src: this.srcForIframe(fieldName),
       onLoadCallback: (iframe) => {
         this.iframes[fieldName] = iframe;
         this.sendMessageToIframe(fieldName, { action: 'SET_OPTIONS', data: this.dataForIframe(fieldName) })
@@ -78,15 +81,21 @@ export class Client extends IframesMessages {
   }
 
   dataForIframe(fieldName) {
-    return this.fieldNameIsMainIframe(fieldName) ? { fields: this.options.fields } : { [fieldName]: this.options.fields[fieldName] };
+    return this.fieldNameIsMainIframe(fieldName)
+      ? { fields: this.options.fields }
+      : { [fieldName]: this.options.fields[fieldName] };
   }
 
   srcForIframe(fieldName) {
-    return this.fieldNameIsMainIframe(fieldName) ? `${IframeOrigin}/dist/main.html` : `${IframeOrigin}/dist/field.html`;
+    return this.fieldNameIsMainIframe(fieldName)
+      ? `${IframeOrigin}/dist/main.html`
+      : `${IframeOrigin}/dist/field.html`;
   }
 
   elementToAppendIframeTo(fieldName) {
-    return this.fieldNameIsMainIframe(fieldName) ? document.body : document.querySelector(this.options.fields[fieldName]['selector']);
+    return this.fieldNameIsMainIframe(fieldName)
+      ? document.body
+      : document.querySelector(this.options.fields[fieldName].selector);
   }
 
   sendMessageToIframe(name, message) {
@@ -94,21 +103,23 @@ export class Client extends IframesMessages {
   }
 
   sendMessageToIframes(message) {
-    Object.keys(this.iframes).filter(fieldName => fieldName !== Client.mainIframeName).forEach(fieldName => {
-      this.sendMessageToIframe(fieldName, message);
-    })
+    Object.keys(this.iframes)
+      .filter((fieldName) => fieldName !== Client.mainIframeName)
+      .forEach((fieldName) => {
+        this.sendMessageToIframe(fieldName, message);
+      });
   }
 
   setIframeSize(message) {
     const iframe = this.iframes[message.data.fieldName];
 
     const styles = {
-      width: message.data.width + 4 + 'px',
-      height: message.data.height + 4 + 'px',
-    }
+      width: `${message.data.width + 4}px`,
+      height: `${message.data.height + 4}px`,
+    };
 
     setStylesOnElement(iframe, styles);
   }
-};
+}
 
-window.Client = Client
+window.Client = Client;

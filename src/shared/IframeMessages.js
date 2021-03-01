@@ -3,17 +3,19 @@ export const IframeOrigin = 'http://localhost:4000';
 export class IframesMessages {
   /*
     Redeclare this in the inherited classes, it should be in the format of:
-    key - action name, value - object with key 'method' that will store reference to method that should handle this message.
+    key - action name, value - object with key 'method' that will store reference
+    to method that should handle this message.
 
     For example:
     {
-      'INPUT_SIZE': { method: this.setIframeSize }
+      INPUT_SIZE: { method: this.setIframeSize }
     }
 
-    If you do not want to check origin of the recevied message add skipOriginCheck: true like in this example:
+    If you do not want to check origin of the recevied message add skipOriginCheck: true
+    like in this example:
 
     {
-      'SET_OPTIONS': { method: this.setOptions, skipOriginCheck: true },
+      SET_OPTIONS: { method: this.setOptions, skipOriginCheck: true },
     }
   */
   receivedMessageToMethod = {};
