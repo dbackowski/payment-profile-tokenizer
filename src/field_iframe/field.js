@@ -41,7 +41,8 @@ class Field extends IframesMessages {
   optionsForHtmlGenerator() {
     return {
       fieldLabel: this.getFieldLabel(),
-      type: 'text',
+      type: this.options[this.fieldName()].type || 'text',
+      selectOptions: this.options[this.fieldName()].selectOptions,
       styles: {
         field: this.getFieldStyle(),
         label: this.getLabelStyle(),
@@ -50,7 +51,7 @@ class Field extends IframesMessages {
   }
 
   createField() {
-    const html = new InputHtmlGenerator(this.fieldName(), 'text', this.optionsForHtmlGenerator());
+    const html = new InputHtmlGenerator(this.fieldName(), this.optionsForHtmlGenerator());
     const elem = html.output();
 
     document.body.appendChild(elem);
