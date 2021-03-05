@@ -83,7 +83,7 @@ class Field extends IframesMessages {
     const mainIframe = window.top.frames[Client.mainIframeName];
     if (mainIframe.origin !== IframeOrigin) return;
 
-    const { value } = document.querySelector('input');
+    const { value } = document.querySelector(`#${this.fieldName()}`);
     const message = {
       action: 'FIELD_VALUE',
       data: {

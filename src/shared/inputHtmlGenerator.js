@@ -31,13 +31,14 @@ export default class InputHtmlGenerator {
   }
 
   inputForType() {
-    return this.inputTypes[this.options.type]();
+    return this.inputTypes[this.options.type].call(this);
   }
 
   inputTypeText() {
     const input = document.createElement('input');
 
-    input.name = this.options.fieldName;
+    input.id = this.fieldName;
+    input.name = this.fieldName;
     input.className = 'input';
     setStylesOnElement(input, this.options.styles.field);
 
@@ -50,13 +51,14 @@ export default class InputHtmlGenerator {
     this.options.options.forEach((option) => {
       const optionElem = document.createElement('option');
 
-      optionElem.value = option.key;
-      optionElem.text = option.value;
+      optionElem.value = option.value;
+      optionElem.text = option.text;
 
       input.add(optionElem);
     });
 
-    input.name = this.options.fieldName;
+    input.id = this.fieldName;
+    input.name = this.fieldName;
     input.className = 'select';
     setStylesOnElement(input, this.options.styles.field);
 
