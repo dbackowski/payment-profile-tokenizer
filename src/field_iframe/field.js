@@ -42,7 +42,7 @@ class Field extends IframesMessages {
     return {
       fieldLabel: this.getFieldLabel(),
       type: this.options[this.fieldName()].type || 'text',
-      selectOptions: this.options[this.fieldName()].selectOptions,
+      options: this.options[this.fieldName()].options,
       styles: {
         field: this.getFieldStyle(),
         label: this.getLabelStyle(),

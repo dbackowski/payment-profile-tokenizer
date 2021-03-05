@@ -5,6 +5,11 @@ export default class InputHtmlGenerator {
 
   options = {};
 
+  inputTypes = {
+    text: this.inputTypeText,
+    select: this.inputTypeSelect,
+  }
+
   constructor(fieldName, options = {}) {
     this.fieldName = fieldName;
     this.options = options;
@@ -26,22 +31,7 @@ export default class InputHtmlGenerator {
   }
 
   inputForType() {
-    let input;
-
-    switch (this.options.type) {
-      case 'text':
-        input = this.inputTypeText();
-        break;
-
-      case 'select':
-        input = this.inputTypeSelect();
-        break;
-
-      default:
-        //
-    }
-
-    return input;
+    return this.inputTypes[this.options.type]();
   }
 
   inputTypeText() {
@@ -57,13 +47,13 @@ export default class InputHtmlGenerator {
   inputTypeSelect() {
     const input = document.createElement('select');
 
-    Object.entries(this.options.selectOptions).forEach(([key, value]) => {
-      const option = document.createElement('option');
+    this.options.options.forEach((option) => {
+      const optionElem = document.createElement('option');
 
-      option.value = key;
-      option.text = value;
+      optionElem.value = option.key;
+      optionElem.text = option.value;
 
-      input.add(option);
+      input.add(optionElem);
     });
 
     input.name = this.options.fieldName;
