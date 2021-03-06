@@ -40,6 +40,7 @@ export default class InputHtmlGenerator {
     input.id = this.fieldName;
     input.name = this.fieldName;
     input.className = 'input';
+    input.placeholder = this.options.placeholder;
     setStylesOnElement(input, this.options.styles.field);
 
     return input;
@@ -47,6 +48,14 @@ export default class InputHtmlGenerator {
 
   inputTypeSelect() {
     const input = document.createElement('select');
+
+    const placeholderOption = document.createElement('option');
+    placeholderOption.value = '';
+    placeholderOption.text = this.options.placeholder;
+    placeholderOption.setAttribute('disabled', '');
+    placeholderOption.setAttribute('selected', '');
+
+    input.add(placeholderOption);
 
     this.options.options.forEach((option) => {
       const optionElem = document.createElement('option');

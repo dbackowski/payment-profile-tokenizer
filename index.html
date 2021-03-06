@@ -8,7 +8,7 @@
     <div id="expiration-month"></div>
     <div id="expiration-year"></div>
     <div id="credit-card-number"></div>
-    <div id="cvv"></div>
+    <div id="cvc"></div>
     <button id="submit">Submit</button>
 
     <script>
@@ -16,20 +16,24 @@
         fields: {
           firstName: {
             selector: '#first-name',
-            label: 'First Name'
+            label: 'First Name',
+            placeholder: 'John',
           },
           lastName: {
             selector: '#last-name',
-            label: 'Last Name'
+            label: 'Last Name',
+            placeholder: 'Doe',
           },
           creditCardNumber: {
             selector: '#credit-card-number',
-            label: 'Card Number'
+            label: 'Card Number',
+            placeholder: 'Card Number',
           },
           expirationMonth: {
             selector: '#expiration-month',
             label: 'Expiration Month',
             type: 'select',
+            placeholder: 'Select month',
             options: [
               { value: '1', text: '1' },
               { value: '2', text: '2' },
@@ -49,6 +53,7 @@
             selector: '#expiration-year',
             label: 'Expiration Year',
             type: 'select',
+            placeholder: 'Select year',
             options: [
               { value: '2021', text: '2021' },
               { value: '2022', text: '2022' },
@@ -58,8 +63,9 @@
             ]
           },
           cvv: {
-            selector: '#cvv',
-            label: 'CVC'
+            selector: '#cvc',
+            label: 'CVC',
+            placeholder: 'CVC'
           },
         }
       };
