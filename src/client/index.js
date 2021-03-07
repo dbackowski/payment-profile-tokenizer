@@ -1,5 +1,6 @@
 import { IframesMessages, IframeOrigin } from '../shared/IframeMessages';
 import { setStylesOnElement, createIframe } from '../shared/helpers';
+import optionsValidator from '../shared/optionsValidator';
 
 export default class Client extends IframesMessages {
   static mainIframeName = 'mainIframe';
@@ -18,7 +19,7 @@ export default class Client extends IframesMessages {
   }
 
   async create() {
-    if (!Client.validateOptions()) return;
+    if (!optionsValidator.validate(this.options)) return;
 
     await this.createMainIframe();
     await this.createFields();
@@ -26,11 +27,6 @@ export default class Client extends IframesMessages {
 
   tokenize() {
     this.sendMessageToIframes({ action: 'SEND_FIELD_VALUE_TO_MAIN_IFRAME' });
-  }
-
-  static validateOptions() {
-    // for now it will always returns true
-    return true;
   }
 
   createFields() {
