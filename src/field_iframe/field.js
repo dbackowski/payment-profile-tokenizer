@@ -64,8 +64,8 @@ class Field extends IframesMessages {
       action: 'INPUT_SIZE',
       data: {
         fieldName: this.fieldName(),
-        width: input.offsetWidth,
-        height: input.offsetHeight,
+        width: document.body.scrollWidth,
+        height: document.body.scrollHeight,
       },
     });
   }
