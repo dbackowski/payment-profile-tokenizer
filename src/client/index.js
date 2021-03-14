@@ -13,16 +13,22 @@ export default class Client extends IframesMessages {
     INPUT_SIZE: { method: this.setIframeSize },
   };
 
-  constructor(options) {
-    super();
+  async create(options) {
+    if (!optionsValidator.validate(options)) return;
+
     this.options = options;
-  }
-
-  async create() {
-    if (!optionsValidator.validate(this.options)) return;
-
     await this.createMainIframe();
     await this.createFields();
+  }
+
+  remove() {
+    this.stopListeningOnMessages();
+
+    Object.keys(this.iframes).forEach((fieldName) => {
+      const iframe = this.iframes[fieldName];
+      iframe.remove();
+      delete this.iframes[fieldName];
+    });
   }
 
   tokenize() {

@@ -20,14 +20,19 @@ export class IframesMessages {
   */
   receivedMessageToMethod = {};
 
+  referenceForHandleReceivedMessage;
+
   constructor() {
+    this.referenceForHandleReceivedMessage = (event) => this.handleReceivedMessage(event);
     this.startListeningOnMessages();
   }
 
   startListeningOnMessages() {
-    window.onmessage = (event) => {
-      this.handleReceivedMessage(event);
-    };
+    window.addEventListener('message', this.referenceForHandleReceivedMessage);
+  }
+
+  stopListeningOnMessages() {
+    window.removeEventListener('message', this.referenceForHandleReceivedMessage);
   }
 
   handleReceivedMessage(message) {
