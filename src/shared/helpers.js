@@ -18,3 +18,5 @@ export const createIframe = (options = {}) => new Promise((resolve) => {
 
   options.elementToAppendIframeTo.appendChild(iframe);
 });
+
+export const getHostOrigin = () => window.location.origin;

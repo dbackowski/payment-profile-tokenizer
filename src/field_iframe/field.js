@@ -60,7 +60,7 @@ class Field extends IframesMessages {
   }
 
   sendInputSizeToClient() {
-    Field.sendMessageToClient({
+    this.sendMessageToClient({
       action: 'INPUT_SIZE',
       data: {
         fieldName: this.fieldName(),
@@ -76,8 +76,8 @@ class Field extends IframesMessages {
     this.createField();
   }
 
-  static sendMessageToClient(message) {
-    window.top.postMessage(message, '*');
+  sendMessageToClient(message) {
+    window.top.postMessage(message, this.options.hostOrigin);
   }
 
   sendFieldValueToMainIframe() {

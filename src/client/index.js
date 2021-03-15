@@ -1,5 +1,5 @@
 import { IframesMessages, IframeOrigin } from '../shared/IframeMessages';
-import { setStylesOnElement, createIframe } from '../shared/helpers';
+import { setStylesOnElement, createIframe, getHostOrigin } from '../shared/helpers';
 import optionsValidator from '../shared/optionsValidator';
 
 export default class Client extends IframesMessages {
@@ -83,8 +83,8 @@ export default class Client extends IframesMessages {
 
   dataForIframe(fieldName) {
     return Client.fieldNameIsMainIframe(fieldName)
-      ? { fields: this.options.fields }
-      : { [fieldName]: this.options.fields[fieldName] };
+      ? { fields: this.options.fields, hostOrigin: getHostOrigin() }
+      : { [fieldName]: this.options.fields[fieldName], hostOrigin: getHostOrigin() };
   }
 
   static srcForIframe(fieldName) {
