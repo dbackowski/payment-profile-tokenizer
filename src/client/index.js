@@ -1,4 +1,4 @@
-import { IframesMessages, IframeOrigin } from '../shared/IframeMessages';
+import IframesMessages from '../shared/IframeMessages';
 import { setStylesOnElement, createIframe, getHostOrigin } from '../shared/helpers';
 import optionsValidator from '../shared/optionsValidator';
 
@@ -13,10 +13,14 @@ export default class Client extends IframesMessages {
     INPUT_SIZE: { method: this.setIframeSize },
   };
 
-  async create(options) {
-    if (!optionsValidator.validate(options)) return;
+  originForIframes;
 
+  async create(options) {
     this.options = options;
+    this.originForIframes = this.getOriginForIframes();
+
+    if (!this.originForIframes || !optionsValidator.validate(options)) return;
+
     await this.createMainIframe();
     await this.createFields();
   }
@@ -68,7 +72,7 @@ export default class Client extends IframesMessages {
     return {
       fieldName,
       elementToAppendIframeTo: this.elementToAppendIframeTo(fieldName),
-      src: Client.srcForIframe(fieldName),
+      src: this.srcForIframe(fieldName),
       onLoadCallback: (iframe) => {
         this.iframes[fieldName] = iframe;
         this.sendMessageToIframe(fieldName, { action: 'SET_OPTIONS', data: this.dataForIframe(fieldName) });
@@ -87,10 +91,10 @@ export default class Client extends IframesMessages {
       : { [fieldName]: this.options.fields[fieldName], hostOrigin: getHostOrigin() };
   }
 
-  static srcForIframe(fieldName) {
+  srcForIframe(fieldName) {
     return Client.fieldNameIsMainIframe(fieldName)
-      ? `${IframeOrigin}/dist/main.html`
-      : `${IframeOrigin}/dist/field.html`;
+      ? `${this.originForIframes}/dist/main.html`
+      : `${this.originForIframes}/dist/field.html`;
   }
 
   elementToAppendIframeTo(fieldName) {
@@ -100,7 +104,7 @@ export default class Client extends IframesMessages {
   }
 
   sendMessageToIframe(name, message) {
-    this.iframes[name].contentWindow.postMessage(message, IframeOrigin);
+    this.iframes[name].contentWindow.postMessage(message, this.originForIframes);
   }
 
   sendMessageToIframes(message) {
@@ -120,6 +124,18 @@ export default class Client extends IframesMessages {
     };
 
     setStylesOnElement(iframe, styles);
+  }
+
+  getOriginForIframes() {
+    const scriptElemForClient = Array.from(document.querySelectorAll('script')).find((script) => {
+      if (!script.src) return null;
+
+      return this.allowedIframeOrigins.find((origin) => script.src.startsWith(origin));
+    });
+
+    if (!scriptElemForClient) return null;
+
+    return new URL(scriptElemForClient.src).origin;
   }
 }
 

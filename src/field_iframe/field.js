@@ -1,4 +1,4 @@
-import { IframesMessages, IframeOrigin } from '../shared/IframeMessages';
+import IframesMessages from '../shared/IframeMessages';
 import Client from '../client';
 import InputHtmlGenerator from '../shared/inputHtmlGenerator';
 
@@ -82,7 +82,7 @@ class Field extends IframesMessages {
 
   sendFieldValueToMainIframe() {
     const mainIframe = window.top.frames[Client.mainIframeName];
-    if (mainIframe.origin !== IframeOrigin) return;
+    if (mainIframe.origin !== this.options.hostOrigin) return;
 
     const { value } = document.querySelector(`#${this.fieldName()}`);
     const message = {
@@ -93,7 +93,7 @@ class Field extends IframesMessages {
       },
     };
 
-    mainIframe.postMessage(message, IframeOrigin);
+    mainIframe.postMessage(message, this.options.hostOrigin);
   }
 }
 

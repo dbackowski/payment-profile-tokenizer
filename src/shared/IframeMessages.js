@@ -1,6 +1,4 @@
-export const IframeOrigin = 'http://localhost:4000';
-
-export class IframesMessages {
+export default class IframesMessages {
   /*
     Redeclare this in the inherited classes, it should be in the format of:
     key - action name, value - object with key 'method' that will store reference
@@ -22,6 +20,10 @@ export class IframesMessages {
 
   referenceForHandleReceivedMessage;
 
+  allowedIframeOrigins = [
+    'http://localhost:4000',
+  ];
+
   constructor() {
     this.referenceForHandleReceivedMessage = (event) => this.handleReceivedMessage(event);
     this.startListeningOnMessages();
@@ -39,7 +41,7 @@ export class IframesMessages {
     const { method, skipOriginCheck } = this.methodForReceivedMessage(message.data);
 
     if (method == null) return;
-    if (!this.constructor.validOriginMessage(message, skipOriginCheck)) return;
+    if (!this.validOriginMessage(message, skipOriginCheck)) return;
 
     method.call(this, message.data);
   }
@@ -57,9 +59,9 @@ export class IframesMessages {
       && this.receivedMessageToMethod[message.action].method;
   }
 
-  static validOriginMessage(message, skipOriginCheck) {
+  validOriginMessage(message, skipOriginCheck) {
     if (skipOriginCheck) return true;
 
-    return message.origin === IframeOrigin;
+    return this.allowedIframeOrigins.includes(message.origin);
   }
 }

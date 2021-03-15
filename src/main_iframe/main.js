@@ -1,4 +1,4 @@
-import { IframesMessages } from '../shared/IframeMessages';
+import IframesMessages from '../shared/IframeMessages';
 
 class Main extends IframesMessages {
   options = {}
