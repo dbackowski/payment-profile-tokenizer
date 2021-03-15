@@ -16,7 +16,7 @@ export default class InputHtmlGenerator {
   }
 
   output() {
-    const span = document.createElement('span');
+    const div = document.createElement('div');
     const label = document.createElement('label');
     const input = this.inputForType();
 
@@ -24,10 +24,10 @@ export default class InputHtmlGenerator {
     label.innerText = this.options.fieldLabel;
     setStylesOnElement(label, this.options.styles.label);
 
-    span.appendChild(label);
-    span.appendChild(input);
+    div.appendChild(label);
+    div.appendChild(input);
 
-    return span;
+    return div;
   }
 
   inputForType() {
