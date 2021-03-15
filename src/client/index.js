@@ -24,8 +24,7 @@ export default class Client extends IframesMessages {
   remove() {
     this.stopListeningOnMessages();
 
-    Object.keys(this.iframes).forEach((fieldName) => {
-      const iframe = this.iframes[fieldName];
+    Object.entries(this.iframes).forEach(([fieldName, iframe]) => {
       iframe.remove();
       delete this.iframes[fieldName];
     });
