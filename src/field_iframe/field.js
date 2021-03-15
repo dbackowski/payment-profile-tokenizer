@@ -56,10 +56,10 @@ class Field extends IframesMessages {
     const elem = html.output();
 
     document.body.appendChild(elem);
-    this.sendInputSizeToClient(elem);
+    this.sendInputSizeToClient();
   }
 
-  sendInputSizeToClient(input) {
+  sendInputSizeToClient() {
     Field.sendMessageToClient({
       action: 'INPUT_SIZE',
       data: {

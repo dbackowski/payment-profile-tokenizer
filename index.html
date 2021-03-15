@@ -46,8 +46,8 @@
           },
         }
       };
-      var lib = new Client(options);
-      lib.create();
+      var lib = new Client();
+      lib.create(options);
 
       document.querySelector('#submit').addEventListener('click', function() {
         lib.tokenize();
