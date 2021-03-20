@@ -35,7 +35,7 @@ export default class Client extends IframesMessages {
   }
 
   tokenize() {
-    this.sendMessageToIframes({ action: 'SEND_FIELD_VALUE_TO_MAIN_IFRAME' });
+    this.sendMessageToMainIframe({ action: 'TOKENIZE' });
   }
 
   createFields() {
@@ -113,6 +113,10 @@ export default class Client extends IframesMessages {
       .forEach((fieldName) => {
         this.sendMessageToIframe(fieldName, message);
       });
+  }
+
+  sendMessageToMainIframe(message) {
+    this.iframes[Client.mainIframeName].contentWindow.postMessage(message, this.originForIframes);
   }
 
   setIframeSize(message) {

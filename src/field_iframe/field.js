@@ -55,6 +55,8 @@ class Field extends IframesMessages {
     const html = new InputHtmlGenerator(this.fieldName(), this.optionsForHtmlGenerator());
     const elem = html.output();
 
+    elem.addEventListener('keyup', this.sendFieldValueToMainIframe.bind(this));
+
     document.body.appendChild(elem);
     this.sendInputSizeToClient();
   }

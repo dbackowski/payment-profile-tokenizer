@@ -8,6 +8,7 @@ class Main extends IframesMessages {
   receivedMessageToMethod = {
     SET_OPTIONS: { method: this.setOptions, skipOriginCheck: true },
     FIELD_VALUE: { method: this.receivedFieldValue },
+    TOKENIZE: { method: this.tokenize, skipOriginCheck: true },
   };
 
   setOptions(message) {
@@ -16,7 +17,9 @@ class Main extends IframesMessages {
 
   receivedFieldValue(message) {
     this.fieldsValues[message.data.fieldName] = message.data.value;
+  }
 
+  tokenize() {
     if (!this.receivedValuesForAllFields()) return;
 
     if (this.validateFields()) {
