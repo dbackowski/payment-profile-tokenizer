@@ -20,16 +20,12 @@ class Main extends IframesMessages {
   }
 
   tokenize() {
-    if (!this.receivedValuesForAllFields()) return;
-
     if (this.validateFields()) {
       console.log('here we will send data to the backend'); // eslint-disable-line no-console
       console.log(this.fieldsValues); // eslint-disable-line no-console
     } else {
       console.log('not all fields were filled in'); // eslint-disable-line no-console
     }
-
-    this.fieldsValues = {};
   }
 
   receivedValuesForAllFields() {
@@ -37,7 +33,36 @@ class Main extends IframesMessages {
   }
 
   validateFields() {
-    return Object.keys(this.fieldsValues).every((fieldNmae) => this.fieldsValues[fieldNmae] !== '');
+    const fieldsValidationResults = Object.keys(this.options.fields).map((fieldName) => {
+      const fieldIsValid = this.fieldsValues[fieldName] != null && this.fieldsValues[fieldName] !== '';
+      let message;
+
+      if (fieldIsValid) {
+        message = {
+          action: 'HIDE_ERROR_MESSAGE',
+        };
+      } else {
+        message = {
+          action: 'SHOW_ERROR_MESSAGE',
+          data: {
+            error: 'Field can not be empty',
+          },
+        };
+      }
+
+      this.sendMessageToIframe(fieldName, message);
+
+      return fieldIsValid;
+    });
+
+    return fieldsValidationResults.every((result) => result);
+  }
+
+  sendMessageToIframe(fieldName, message) {
+    const iframe = window.top.frames[fieldName];
+    if (iframe.origin !== this.options.hostOrigin) return;
+
+    iframe.postMessage(message, this.options.hostOrigin);
   }
 }
 

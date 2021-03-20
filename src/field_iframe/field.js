@@ -16,6 +16,8 @@ class Field extends IframesMessages {
       method: this.sendFieldValueToMainIframe,
       skipOriginCheck: true,
     },
+    SHOW_ERROR_MESSAGE: { method: this.showErrorMessage },
+    HIDE_ERROR_MESSAGE: { method: this.hideErrorMessage },
   };
 
   fieldName() {
@@ -96,6 +98,27 @@ class Field extends IframesMessages {
     };
 
     mainIframe.postMessage(message, this.options.hostOrigin);
+  }
+
+  hideErrorMessage() {
+    const errorElem = document.querySelector('.error-msg');
+    if (errorElem.innerHTML.length === 0) return;
+
+    errorElem.style.display = 'none';
+    errorElem.innerHTML = '';
+
+    this.sendInputSizeToClient();
+  }
+
+  showErrorMessage(message) {
+    const errorElem = document.querySelector('.error-msg');
+
+    if (errorElem.innerHTML.length !== 0) return;
+
+    errorElem.innerHTML = message.data.error;
+    errorElem.style.display = 'block';
+
+    this.sendInputSizeToClient();
   }
 }
 

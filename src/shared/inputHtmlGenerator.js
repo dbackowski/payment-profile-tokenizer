@@ -19,6 +19,8 @@ export default class InputHtmlGenerator {
     const div = document.createElement('div');
     const label = document.createElement('label');
     const input = this.inputForType();
+    const errorMsgDiv = document.createElement('div');
+    errorMsgDiv.className = 'error-msg';
 
     label.setAttribute('for', input.name);
     label.innerText = this.options.fieldLabel;
@@ -26,6 +28,7 @@ export default class InputHtmlGenerator {
 
     div.appendChild(label);
     div.appendChild(input);
+    div.appendChild(errorMsgDiv);
 
     return div;
   }
