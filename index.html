@@ -1,48 +1,85 @@
 <html>
   <head>
     <script src="http://localhost:4000/dist/client.js"></script>
+    <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <div id="first-name"></div>
-    <div id="last-name"></div>
-    <div id="credit-card-number"></div>
-    <div id="expiration-month"></div>
-    <div id="expiration-year"></div>
-    <div id="cvc"></div>
-    <button id="submit">Submit</button>
+    <div class="container">
+      <div class="example">
+        <div id="first-name"></div>
+        <div id="last-name"></div>
+        <div id="credit-card-number"></div>
+        <div id="expiration-month"></div>
+        <div id="expiration-year"></div>
+        <div id="cvc"></div>
+        <button id="submit">Submit</button>
+      </div>
+    </div>
 
     <script>
+      var style = {
+        label: {
+          display: 'inline-block',
+          float: 'left',
+          padding: '11px 20px',
+          textAlign: 'left',
+          width: '120px',
+          backgroundColor: '#bff7c8',
+          margin: '0px',
+          borderRadius: '5px 0px 0px 5px',
+          color: '#64ac12',
+        },
+        field: {
+          backgroundColor: '#bff7c8',
+          display: 'inline-block',
+          verticalAlign: 'middle',
+          margin: '0px',
+          minWidth: '300px',
+          borderStyle: 'none',
+          padding: '12px 0',
+          height: '40px',
+          outline: 'none',
+          borderRadius: '0px 5px 5px 0px',
+        },
+      };
+
       var options = {
         fields: {
           firstName: {
             selector: '#first-name',
             label: 'First Name',
             placeholder: 'John',
+            style: style,
           },
           lastName: {
             selector: '#last-name',
             label: 'Last Name',
             placeholder: 'Doe',
+            style: style,
           },
           creditCardNumber: {
             selector: '#credit-card-number',
             label: 'Card Number',
             placeholder: 'Card Number',
+            style: style,
           },
           expirationMonth: {
             selector: '#expiration-month',
             label: 'Expiration Month',
-            placeholder: 'MM'
+            placeholder: 'MM',
+            style: style,
           },
           expirationYear: {
             selector: '#expiration-year',
             label: 'Expiration Year',
-            placeholder: 'YY'
+            placeholder: 'YY',
+            style: style,
           },
           cvv: {
             selector: '#cvc',
             label: 'CVC',
-            placeholder: 'CVC'
+            placeholder: 'CVC',
+            style: style,
           },
         }
       };
