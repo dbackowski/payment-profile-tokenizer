@@ -28,10 +28,6 @@ class Main extends IframesMessages {
     }
   }
 
-  receivedValuesForAllFields() {
-    return (Object.keys(this.fieldsValues).length === Object.keys(this.options.fields).length);
-  }
-
   validateFields() {
     const fieldsValidationResults = Object.keys(this.options.fields).map((fieldName) => {
       const fieldIsValid = this.fieldsValues[fieldName] != null && this.fieldsValues[fieldName] !== '';
