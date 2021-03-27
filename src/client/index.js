@@ -123,8 +123,8 @@ export default class Client extends IframesMessages {
     const iframe = this.iframes[message.data.fieldName];
 
     const styles = {
-      width: `${message.data.width + 4}px`,
-      height: `${message.data.height + 4}px`,
+      width: message.data.width,
+      height: message.data.height,
     };
 
     setStylesOnElement(iframe, styles);
