@@ -17,31 +17,37 @@
     </div>
 
     <script>
-      var style = {
-        label: {
-          display: 'inline-block',
-          float: 'left',
-          padding: '11px 20px',
-          textAlign: 'left',
-          width: '120px',
-          backgroundColor: '#bff7c8',
-          margin: '0px',
-          borderRadius: '5px 0px 0px 5px',
-          color: '#64ac12',
-        },
-        field: {
-          backgroundColor: '#bff7c8',
-          display: 'inline-block',
-          verticalAlign: 'middle',
-          margin: '0px',
-          minWidth: '300px',
-          borderStyle: 'none',
-          padding: '12px 0',
-          height: '40px',
-          outline: 'none',
-          borderRadius: '0px 5px 5px 0px',
-        },
-      };
+      var style = function(style = { field: {}, label: {} }) {
+        var result = {
+          label: {
+            display: 'inline-block',
+            float: 'left',
+            padding: '11px 20px',
+            textAlign: 'left',
+            width: '120px',
+            backgroundColor: '#bff7c8',
+            margin: '0px',
+            color: '#64ac12',
+          },
+          field: {
+            backgroundColor: '#bff7c8',
+            display: 'inline-block',
+            verticalAlign: 'middle',
+            margin: '0px',
+            minWidth: '300px',
+            borderStyle: 'none',
+            padding: '12px 0',
+            height: '40px',
+            outline: 'none',
+          },
+        };
+
+        Object.keys(result).forEach(function(key) {
+          result[key] = Object.assign(result[key], style[key]);
+        });
+
+        return result;
+      }
 
       var options = {
         fields: {
@@ -49,37 +55,37 @@
             selector: '#first-name',
             label: 'First Name',
             placeholder: 'John',
-            style: style,
+            style: style({ label: { borderRadius: '5px 0px 0px 0px' }, field: { borderRadius: '0px 5px 0px 0px' } }),
           },
           lastName: {
             selector: '#last-name',
             label: 'Last Name',
             placeholder: 'Doe',
-            style: style,
+            style: style({ label: { borderRadius: '0px 0px 0px 5px' }, field: { borderRadius: '0px 0px 5px 0px' } }),
           },
           creditCardNumber: {
             selector: '#credit-card-number',
             label: 'Card Number',
             placeholder: 'Card Number',
-            style: style,
+            style: style({ label: { borderRadius: '5px 0px 0px 0px' }, field: { borderRadius: '0px 5px 0px 0px' } }),
           },
           expirationMonth: {
             selector: '#expiration-month',
             label: 'Expiration Month',
             placeholder: 'MM',
-            style: style,
+            style: style(),
           },
           expirationYear: {
             selector: '#expiration-year',
             label: 'Expiration Year',
             placeholder: 'YY',
-            style: style,
+            style: style(),
           },
           cvv: {
             selector: '#cvc',
             label: 'CVC',
             placeholder: 'CVC',
-            style: style,
+            style: style({ label: { borderRadius: '0px 0px 0px 5px' }, field: { borderRadius: '0px 0px 5px 0px' } }),
           },
         }
       };
