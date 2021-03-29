@@ -1,6 +1,7 @@
 import IframesMessages from '../shared/IframeMessages';
 import Client from '../client';
 import InputHtmlGenerator from '../shared/inputHtmlGenerator';
+import InputFormatter from '../shared/inputFormatter';
 
 class Field extends IframesMessages {
   options = {};
@@ -40,6 +41,10 @@ class Field extends IframesMessages {
     return this.options[this.fieldName()].label;
   }
 
+  getInputFormat() {
+    return this.options[this.fieldName()].inputFormat;
+  }
+
   optionsForHtmlGenerator() {
     return {
       fieldLabel: this.getFieldLabel(),
@@ -56,6 +61,10 @@ class Field extends IframesMessages {
   createField() {
     const html = new InputHtmlGenerator(this.fieldName(), this.optionsForHtmlGenerator());
     const elem = html.output();
+
+    if (this.getInputFormat()) {
+      elem.addEventListener('input', this.formatInput.bind(this));
+    }
 
     elem.addEventListener('keyup', this.sendFieldValueToMainIframe.bind(this));
 
@@ -82,6 +91,11 @@ class Field extends IframesMessages {
 
   sendMessageToClient(message) {
     window.top.postMessage(message, this.options.hostOrigin);
+  }
+
+  formatInput(event) {
+    const inputElem = document.querySelector(`#${this.fieldName()}`);
+    inputElem.value = InputFormatter.format(this.getInputFormat(), event.target.value);
   }
 
   sendFieldValueToMainIframe() {
