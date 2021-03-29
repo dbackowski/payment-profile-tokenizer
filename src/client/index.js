@@ -16,6 +16,11 @@ export default class Client extends IframesMessages {
   originForIframes;
 
   async create(options) {
+    if (Object.keys(this.iframes).length > 0) {
+      this.remove();
+      this.startListeningOnMessages();
+    }
+
     this.options = options;
     this.originForIframes = this.getOriginForIframes();
 
