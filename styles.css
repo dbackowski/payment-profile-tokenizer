@@ -15,8 +15,17 @@
   margin-right: -20px;
 }
 
-#credit-card-number {
+#credit-card-inline {
+  display: flex;
   margin-top: 20px;
+}
+
+#slash {
+  background-color: #bff7c8;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0px;
+  padding-top: 12px;
 }
 
 .example button {

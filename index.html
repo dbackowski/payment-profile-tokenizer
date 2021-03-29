@@ -8,10 +8,13 @@
       <div class="example">
         <div id="first-name"></div>
         <div id="last-name"></div>
-        <div id="credit-card-number"></div>
-        <div id="expiration-month"></div>
-        <div id="expiration-year"></div>
-        <div id="cvc"></div>
+        <div id="credit-card-inline">
+          <div id="credit-card-number"></div>
+          <div id="expiration-month"></div>
+          <div id="slash">/</div>
+          <div id="expiration-year"></div>
+          <div id="cvc"></div>
+        </div>
         <button id="submit">Submit</button>
       </div>
     </div>
@@ -34,7 +37,6 @@
             display: 'inline-block',
             verticalAlign: 'middle',
             margin: '0px',
-            minWidth: '300px',
             borderStyle: 'none',
             padding: '12px 0',
             height: '40px',
@@ -55,37 +57,33 @@
             selector: '#first-name',
             label: 'First Name',
             placeholder: 'John',
-            style: style({ label: { borderRadius: '5px 0px 0px 0px', borderBottom: '1px solid #64ac12' }, field: { borderRadius: '0px 5px 0px 0px' } }),
+            style: style({ label: { borderRadius: '5px 0px 0px 0px', borderBottom: '1px solid #64ac12' }, field: { minWidth: '300px', borderRadius: '0px 5px 0px 0px' } }),
           },
           lastName: {
             selector: '#last-name',
             label: 'Last Name',
             placeholder: 'Doe',
-            style: style({ label: { borderRadius: '0px 0px 0px 5px' }, field: { borderRadius: '0px 0px 5px 0px' } }),
+            style: style({ label: { borderRadius: '0px 0px 0px 5px' }, field: { minWidth: '300px', borderRadius: '0px 0px 5px 0px' } }),
           },
           creditCardNumber: {
             selector: '#credit-card-number',
-            label: 'Card Number',
             placeholder: 'Card Number',
-            style: style({ label: { borderRadius: '5px 0px 0px 0px', borderBottom: '1px solid #64ac12' }, field: { borderRadius: '0px 5px 0px 0px' } }),
+            style: style({ field: { width: '330px', borderRadius: '5px 0px 0px 5px', paddingLeft: '20px' } }),
           },
           expirationMonth: {
             selector: '#expiration-month',
-            label: 'Expiration Month',
             placeholder: 'MM',
-            style: style({ label: { borderBottom: '1px solid #64ac12' } }),
+            style: style({ field: { width: '30px' } }),
           },
           expirationYear: {
             selector: '#expiration-year',
-            label: 'Expiration Year',
             placeholder: 'YY',
-            style: style({ label: { borderBottom: '1px solid #64ac12' } }),
+            style: style({ field: { paddingLeft: '5px', width: '45px' } }),
           },
           cvv: {
             selector: '#cvc',
-            label: 'CVC',
             placeholder: 'CVC',
-            style: style({ label: { borderRadius: '0px 0px 0px 5px' }, field: { borderRadius: '0px 0px 5px 0px' } }),
+            style: style({ field: { width: '50px', borderRadius: '0px 5px 5px 0px', paddingRight: '20px' } }),
           },
         }
       };

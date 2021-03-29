@@ -17,16 +17,18 @@ export default class InputHtmlGenerator {
 
   output() {
     const div = document.createElement('div');
-    const label = document.createElement('label');
     const input = this.inputForType();
     const errorMsgDiv = document.createElement('div');
     errorMsgDiv.className = 'error-msg';
 
-    label.setAttribute('for', input.name);
-    label.innerText = this.options.fieldLabel;
-    setStylesOnElement(label, this.options.styles.label);
+    if (this.options.fieldLabel) {
+      const label = document.createElement('label');
+      label.setAttribute('for', input.name);
+      label.innerText = this.options.fieldLabel;
+      setStylesOnElement(label, this.options.styles.label);
+      div.appendChild(label);
+    }
 
-    div.appendChild(label);
     div.appendChild(input);
     div.appendChild(errorMsgDiv);
 
