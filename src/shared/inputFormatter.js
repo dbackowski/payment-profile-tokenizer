@@ -17,7 +17,9 @@ export default class InputFormatter {
   static creditCardFormat(value) {
     return value.replace(new RegExp(/[^\d]/, 'ig'), '')
       .slice(0, 16)
-      .split(/([0-9]{4})/g);
+      .split(/([0-9]{4})/g)
+      .filter((e) => e !== '')
+      .join(' ');
   }
 
   static monthFormat(value) {
