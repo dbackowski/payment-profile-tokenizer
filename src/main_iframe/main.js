@@ -21,21 +21,30 @@ class Main extends IframesMessages {
   }
 
   tokenize() {
-    if (this.validateFields()) {
+    const validationResults = this.validateFields();
+    this.showErrorMessageForInvalidFields(validationResults);
+
+    if (Main.allFieldsAreValid(validationResults)) {
       console.log('here we will send data to the backend'); // eslint-disable-line no-console
       console.log(this.fieldsValues); // eslint-disable-line no-console
       this.sendMessageToClient({ action: 'RECEIVED_TOKEN', message: 'here will be the token' });
     } else {
+      this.sendInvalidFieldsToClient(validationResults);
       console.log('not all fields were filled in'); // eslint-disable-line no-console
     }
   }
 
   validateFields() {
-    const validationResults = Object.keys(this.options.fields).map((fieldName) => (
+    return Object.keys(this.options.fields).map((fieldName) => (
       { fieldName, ...InputValidator.notEmpty(this.fieldsValues[fieldName]) }
     ));
+  }
 
-    // send invalid fields to the client
+  static allFieldsAreValid(validationResults) {
+    return validationResults.every((result) => result.valid);
+  }
+
+  sendInvalidFieldsToClient(validationResults) {
     const invalidFields = validationResults.filter((result) => !result.valid).map((result) => (
       { fieldName: result.fieldName, errorMessage: result.errorMessage }
     ));
@@ -43,8 +52,9 @@ class Main extends IframesMessages {
     if (invalidFields.length > 0) {
       this.sendMessageToClient({ action: 'IVALID_FIELDS', invalidFields });
     }
+  }
 
-    // show errors for invalid fields
+  showErrorMessageForInvalidFields(validationResults) {
     validationResults.forEach((result) => {
       let message;
 
@@ -56,8 +66,6 @@ class Main extends IframesMessages {
 
       this.sendMessageToIframe(result.fieldName, message);
     });
-
-    return validationResults.every((result) => result.valid);
   }
 
   sendMessageToIframe(fieldName, message) {
