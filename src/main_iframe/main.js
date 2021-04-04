@@ -1,4 +1,5 @@
 import IframesMessages from '../shared/IframeMessages';
+import InputValidator from '../shared/inputValidator';
 
 class Main extends IframesMessages {
   options = {}
@@ -23,35 +24,40 @@ class Main extends IframesMessages {
     if (this.validateFields()) {
       console.log('here we will send data to the backend'); // eslint-disable-line no-console
       console.log(this.fieldsValues); // eslint-disable-line no-console
+      this.sendMessageToClient({ action: 'RECEIVED_TOKEN', message: 'here will be the token' });
     } else {
       console.log('not all fields were filled in'); // eslint-disable-line no-console
     }
   }
 
   validateFields() {
-    const fieldsValidationResults = Object.keys(this.options.fields).map((fieldName) => {
-      const fieldIsValid = this.fieldsValues[fieldName] != null && this.fieldsValues[fieldName] !== '';
+    const validationResults = Object.keys(this.options.fields).map((fieldName) => (
+      { fieldName, ...InputValidator.notEmpty(this.fieldsValues[fieldName]) }
+    ));
+
+    // send invalid fields to the client
+    const invalidFields = validationResults.filter((result) => !result.valid).map((result) => (
+      { fieldName: result.fieldName, errorMessage: result.errorMessage }
+    ));
+
+    if (invalidFields.length > 0) {
+      this.sendMessageToClient({ action: 'IVALID_FIELDS', invalidFields });
+    }
+
+    // show errors for invalid fields
+    validationResults.forEach((result) => {
       let message;
 
-      if (fieldIsValid) {
-        message = {
-          action: 'HIDE_ERROR_MESSAGE',
-        };
+      if (result.valid) {
+        message = { action: 'HIDE_ERROR_MESSAGE' };
       } else {
-        message = {
-          action: 'SHOW_ERROR_MESSAGE',
-          data: {
-            error: 'Field can not be empty',
-          },
-        };
+        message = { action: 'SHOW_ERROR_MESSAGE', data: { error: result.errorMessage } };
       }
 
-      this.sendMessageToIframe(fieldName, message);
-
-      return fieldIsValid;
+      this.sendMessageToIframe(result.fieldName, message);
     });
 
-    return fieldsValidationResults.every((result) => result);
+    return validationResults.every((result) => result.valid);
   }
 
   sendMessageToIframe(fieldName, message) {
@@ -59,6 +65,10 @@ class Main extends IframesMessages {
     if (iframe.origin !== this.options.hostOrigin) return;
 
     iframe.postMessage(message, this.options.hostOrigin);
+  }
+
+  sendMessageToClient(message) {
+    window.top.postMessage(message, this.options.hostOrigin);
   }
 }
 

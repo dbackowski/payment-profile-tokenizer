@@ -9,8 +9,14 @@ export default class Client extends IframesMessages {
 
   iframes = {};
 
+  tokenizeOnSuccess;
+
+  tokenizeOnError;
+
   receivedMessageToMethod = {
     INPUT_SIZE: { method: this.setIframeSize },
+    IVALID_FIELDS: { method: this.invalidFields },
+    RECEIVED_TOKEN: { method: this.receivedToken },
   };
 
   originForIframes;
@@ -41,6 +47,11 @@ export default class Client extends IframesMessages {
 
   tokenize() {
     this.sendMessageToMainIframe({ action: 'TOKENIZE' });
+
+    return new Promise((resolve, reject) => {
+      this.tokenizeOnSuccess = resolve;
+      this.tokenizeOnError = reject;
+    });
   }
 
   createFields() {
@@ -133,6 +144,14 @@ export default class Client extends IframesMessages {
     };
 
     setStylesOnElement(iframe, styles);
+  }
+
+  invalidFields(message) {
+    this.tokenizeOnError({ error: 'Some fields are not valid', invalidField: message.invalidFields });
+  }
+
+  receivedToken(message) {
+    this.tokenizeOnSuccess(message.message);
   }
 
   getOriginForIframes() {

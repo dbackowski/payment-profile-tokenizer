@@ -95,7 +95,11 @@
       lib.create(options);
 
       document.querySelector('#submit').addEventListener('click', function() {
-        lib.tokenize();
+        lib.tokenize().then((token) => {
+          console.log(token);
+        }).catch((error) => {
+          console.error(error);
+        });
       });
     </script>
 
