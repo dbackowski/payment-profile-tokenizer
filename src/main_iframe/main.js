@@ -35,9 +35,15 @@ class Main extends IframesMessages {
   }
 
   validateFields() {
-    return Object.keys(this.options.fields).map((fieldName) => (
-      { fieldName, ...InputValidator.notEmpty(this.fieldsValues[fieldName]) }
-    ));
+    return Object.keys(this.options.fields).map((fieldName) => {
+      const validationResult = InputValidator.validate(
+        this.options.fields[fieldName].validator,
+        fieldName,
+        this.fieldsValues,
+      );
+
+      return { fieldName, ...validationResult };
+    });
   }
 
   static allFieldsAreValid(validationResults) {
