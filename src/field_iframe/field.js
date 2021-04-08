@@ -2,6 +2,7 @@ import IframesMessages from '../shared/IframeMessages';
 import Client from '../client';
 import InputHtmlGenerator from '../shared/inputHtmlGenerator';
 import InputFormatter from '../shared/inputFormatter';
+import { setStylesOnElement } from '../shared/helpers';
 
 class Field extends IframesMessages {
   options = {};
@@ -25,16 +26,8 @@ class Field extends IframesMessages {
     return Object.keys(this.options)[0];
   }
 
-  getStyle() {
-    return this.options[this.fieldName()]?.style;
-  }
-
-  getFieldStyle() {
-    return this.getStyle()?.field;
-  }
-
-  getLabelStyle() {
-    return this.getStyle()?.label;
+  getStyleFor(element) {
+    return this.options[this.fieldName()]?.style[element] || {};
   }
 
   getFieldLabel() {
@@ -52,8 +45,8 @@ class Field extends IframesMessages {
       options: this.options[this.fieldName()].options,
       placeholder: this.options[this.fieldName()].placeholder,
       styles: {
-        field: this.getFieldStyle(),
-        label: this.getLabelStyle(),
+        field: this.getStyleFor('field'),
+        label: this.getStyleFor('label'),
       },
     };
   }
@@ -114,7 +107,24 @@ class Field extends IframesMessages {
     mainIframe.postMessage(message, this.options.hostOrigin);
   }
 
+  markFieldAsInvalid() {
+    const label = document.querySelector('label');
+    const input = document.querySelector(`#${this.fieldName()}`);
+
+    if (label) setStylesOnElement(label, this.getStyleFor('labelInvalid'));
+    setStylesOnElement(input, this.getStyleFor('fieldInvalid'));
+  }
+
+  markFieldAsValid() {
+    const label = document.querySelector('label');
+    const input = document.querySelector(`#${this.fieldName()}`);
+
+    if (label) setStylesOnElement(label, this.getStyleFor('label'));
+    setStylesOnElement(input, this.getStyleFor('field'));
+  }
+
   hideErrorMessage() {
+    this.markFieldAsValid();
     const errorElem = document.querySelector('.error-msg');
     if (errorElem.innerHTML.length === 0) return;
 
@@ -125,8 +135,8 @@ class Field extends IframesMessages {
   }
 
   showErrorMessage(message) {
+    this.markFieldAsInvalid();
     const errorElem = document.querySelector('.error-msg');
-
     if (errorElem.innerHTML.length !== 0) return;
 
     errorElem.innerHTML = message.data.error;
