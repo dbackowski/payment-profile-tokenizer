@@ -1,18 +1,55 @@
 export default class InputValidator {
   static AVAILABLE_VALIDATORS = {
     NOT_EMPTY: InputValidator.notEmpty,
+    EXPIRATION_MONTH: InputValidator.expirationMonth,
+    EXPIRATION_YEAR: InputValidator.expirationYear,
   };
 
-  static NOT_EMPTY_ERROR_MESSAGE = 'Field can not be empty';
+  static ERROR_MESSAGES = {
+    NOT_EMPTY_ERROR_MESSAGE: 'Field can not be empty',
+    EXPIRATION_MONTH_IN_PAST: 'Month can not be in the past',
+    EXPIRATION_YEAR_IN_PAST: 'Year can not be in the past',
+  }
 
   static validate(validator, fieldName, fieldsValues) {
     const validatorMethod = InputValidator.AVAILABLE_VALIDATORS[validator];
 
-    return validatorMethod.call(this, fieldsValues[fieldName]);
+    return validatorMethod.call(this, fieldsValues[fieldName], fieldsValues);
   }
 
-  static notEmpty(value, errorMessage = InputValidator.NOT_EMPTY_ERROR_MESSAGE) {
-    const valid = value != null && value !== '';
+  static notEmpty(fieldValue) {
+    const valid = fieldValue != null && fieldValue !== '';
+
+    return { valid, errorMessage: InputValidator.ERROR_MESSAGES.NOT_EMPTY_ERROR_MESSAGE };
+  }
+
+  static expirationMonth(fieldValue, fieldsValues) {
+    let { valid, errorMessage } = InputValidator.notEmpty(fieldValue);
+    if (!valid) return { valid, errorMessage };
+
+    const expirationMonth = parseInt(fieldValue, 10);
+    const expirationYear = parseInt(fieldsValues.expirationYear, 10);
+    const expirationDate = new Date();
+
+    expirationDate.setFullYear(expirationYear, expirationMonth, 0);
+
+    valid = Number.isNaN(expirationYear)
+            || expirationDate.getFullYear() < new Date().getFullYear()
+            || expirationDate > new Date();
+
+    errorMessage = InputValidator.ERROR_MESSAGES.EXPIRATION_MONTH_IN_PAST;
+
+    return { valid, errorMessage };
+  }
+
+  static expirationYear(fieldValue) {
+    let { valid, errorMessage } = InputValidator.notEmpty(fieldValue);
+    if (!valid) return { valid, errorMessage };
+
+    const expirationYear = parseInt(fieldValue, 10);
+
+    valid = expirationYear >= new Date().getFullYear();
+    errorMessage = InputValidator.ERROR_MESSAGES.EXPIRATION_YEAR_IN_PAST;
 
     return { valid, errorMessage };
   }
