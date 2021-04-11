@@ -8,6 +8,7 @@ export default class InputValidator {
   static ERROR_MESSAGES = {
     NOT_EMPTY_ERROR_MESSAGE: 'Field can not be empty',
     EXPIRATION_MONTH_IN_PAST: 'Month can not be in the past',
+    EXPIRATION_MONTH_NOT_VALID: 'Month is invalid',
     EXPIRATION_YEAR_IN_PAST: 'Year can not be in the past',
   }
 
@@ -28,6 +29,14 @@ export default class InputValidator {
     if (!valid) return { valid, errorMessage };
 
     const expirationMonth = parseInt(fieldValue, 10);
+
+    if (expirationMonth < 1 || expirationMonth > 12) {
+      return {
+        valid: false,
+        errorMessage: InputValidator.ERROR_MESSAGES.EXPIRATION_MONTH_NOT_VALID,
+      };
+    }
+
     const expirationYear = parseInt(fieldsValues.expirationYear, 10);
     const expirationDate = new Date();
 
