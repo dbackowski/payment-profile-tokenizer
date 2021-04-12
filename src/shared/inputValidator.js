@@ -1,8 +1,11 @@
+import { lunCheck } from './helpers';
+
 export default class InputValidator {
   static AVAILABLE_VALIDATORS = {
     NOT_EMPTY: InputValidator.notEmpty,
     EXPIRATION_MONTH: InputValidator.expirationMonth,
     EXPIRATION_YEAR: InputValidator.expirationYear,
+    CREDIT_CARD_NUMBER: InputValidator.creditCardNumber,
   };
 
   static ERROR_MESSAGES = {
@@ -10,6 +13,7 @@ export default class InputValidator {
     EXPIRATION_MONTH_IN_PAST: 'Month can not be in the past',
     EXPIRATION_MONTH_NOT_VALID: 'Month is invalid',
     EXPIRATION_YEAR_IN_PAST: 'Year can not be in the past',
+    CREDIT_CARD_NUMBER_NOT_VALID: 'Credit card number is invalid',
   }
 
   static validate(validator, fieldName, fieldsValues) {
@@ -59,6 +63,16 @@ export default class InputValidator {
 
     valid = expirationYear >= new Date().getFullYear();
     errorMessage = InputValidator.ERROR_MESSAGES.EXPIRATION_YEAR_IN_PAST;
+
+    return { valid, errorMessage };
+  }
+
+  static creditCardNumber(fieldValue) {
+    let { valid, errorMessage } = InputValidator.notEmpty(fieldValue);
+    if (!valid) return { valid, errorMessage };
+
+    valid = lunCheck(fieldValue.replace(/\D/g, ''));
+    errorMessage = InputValidator.ERROR_MESSAGES.CREDIT_CARD_NUMBER_NOT_VALID;
 
     return { valid, errorMessage };
   }
