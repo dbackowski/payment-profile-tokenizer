@@ -88,7 +88,9 @@ class Field extends IframesMessages {
 
   formatInput(event) {
     const inputElem = document.querySelector(`#${this.fieldName()}`);
-    inputElem.value = InputFormatter.format(this.getInputFormat(), event.target.value);
+    const { value, carretPosition } = InputFormatter.format(this.getInputFormat(), event.target);
+    inputElem.value = value;
+    if (carretPosition) event.target.setSelectionRange(carretPosition, carretPosition);
   }
 
   sendFieldValueToMainIframe() {
