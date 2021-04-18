@@ -1,6 +1,7 @@
 import IframesMessages from '../shared/IframeMessages';
 import { setStylesOnElement, createIframe, getHostOrigin } from '../shared/helpers';
 import optionsValidator from '../shared/optionsValidator';
+import mergeOptionsWithOptionsForType from '../shared/mergeOptionsWithOptionsForType';
 
 export default class Client extends IframesMessages {
   static mainIframeName = 'mainIframe';
@@ -30,10 +31,21 @@ export default class Client extends IframesMessages {
     this.options = options;
     this.originForIframes = this.getOriginForIframes();
 
-    if (!this.originForIframes || !optionsValidator.validate(options)) return;
+    if (!this.originForIframes) return;
 
     await this.createMainIframe();
-    await this.createFields();
+
+    const {
+      valid: optionsValid,
+      errorMessage: optionsInvalidErrorMessage,
+    } = optionsValidator.validate(options);
+
+    if (optionsValid) {
+      mergeOptionsWithOptionsForType.merge(options);
+      await this.createFields();
+    } else {
+      console.error(optionsInvalidErrorMessage);
+    }
   }
 
   remove() {
