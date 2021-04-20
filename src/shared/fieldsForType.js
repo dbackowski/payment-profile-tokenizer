@@ -3,26 +3,26 @@ export default class fieldsForType {
     creditCard: {
       fields: {
         firstName: {
-          validator: 'NOT_EMPTY',
+          validator: 'notEmpty',
         },
         lastName: {
-          validator: 'NOT_EMPTY',
+          validator: 'notEmpty',
         },
         creditCardNumber: {
-          inputFormat: 'CREDIT_CARD',
-          validator: 'CREDIT_CARD_NUMBER',
+          inputFormat: 'creditCardNumber',
+          validator: 'creditCardNumber',
         },
         expirationMonth: {
-          inputFormat: 'MONTH',
-          validator: 'EXPIRATION_MONTH',
+          inputFormat: 'Month',
+          validator: 'expirationMonth',
         },
         expirationYear: {
-          inputFormat: 'YEAR',
-          validator: 'EXPIRATION_YEAR',
+          inputFormat: 'Year',
+          validator: 'expirationYear',
         },
         cvv: {
-          inputFormat: 'CVC',
-          validator: 'NOT_EMPTY',
+          inputFormat: 'cvc',
+          validator: 'notEmpty',
         },
       },
     },

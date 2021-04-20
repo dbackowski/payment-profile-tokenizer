@@ -1,9 +1,9 @@
 export default class InputFormatter {
   static AVAILABLE_FORMATS = {
-    CREDIT_CARD: InputFormatter.creditCardFormat,
-    MONTH: InputFormatter.monthFormat,
-    YEAR: InputFormatter.yearFormat,
-    CVC: InputFormatter.cvcFormat,
+    creditCardNumber: InputFormatter.creditCardFormat,
+    month: InputFormatter.monthFormat,
+    year: InputFormatter.yearFormat,
+    cvc: InputFormatter.cvcFormat,
   };
 
   static format(type, element) {

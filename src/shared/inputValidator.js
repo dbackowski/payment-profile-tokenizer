@@ -2,10 +2,10 @@ import { lunCheck } from './helpers';
 
 export default class InputValidator {
   static AVAILABLE_VALIDATORS = {
-    NOT_EMPTY: InputValidator.notEmpty,
-    EXPIRATION_MONTH: InputValidator.expirationMonth,
-    EXPIRATION_YEAR: InputValidator.expirationYear,
-    CREDIT_CARD_NUMBER: InputValidator.creditCardNumber,
+    notEmpty: InputValidator.notEmpty,
+    expirationMonth: InputValidator.expirationMonth,
+    expirationYear: InputValidator.expirationYear,
+    creditCardNumber: InputValidator.creditCardNumber,
   };
 
   static ERROR_MESSAGES = {
