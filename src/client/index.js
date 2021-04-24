@@ -42,6 +42,8 @@ export default class Client extends IframesMessages {
 
     if (optionsValid) {
       mergeOptionsWithOptionsForType.merge(options);
+      this.sendMessageToMainIframe({ action: 'SET_OPTIONS', data: this.dataForIframe(Client.mainIframeName) });
+
       await this.createFields();
     } else {
       console.error(optionsInvalidErrorMessage);
