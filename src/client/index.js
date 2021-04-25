@@ -46,7 +46,7 @@ export default class Client extends IframesMessages {
 
       await this.createFields();
     } else {
-      console.error(optionsInvalidErrorMessage);
+      console.error(optionsInvalidErrorMessage); // eslint-disable-line no-console
     }
   }
 
