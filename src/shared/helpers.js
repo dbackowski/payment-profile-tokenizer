@@ -1,3 +1,5 @@
+import fieldsForType from './fieldsForType';
+
 export const setStylesOnElement = (element, styles) => {
   Object.assign(element.style, styles);
 };
@@ -42,3 +44,8 @@ export const lunCheck = (creditCardNumber) => {
 };
 
 export const getHostOrigin = () => window.location.origin;
+
+export const mergeOptionsWithOptionsForType = (options) => {
+  const fields = fieldsForType.fields(options.type);
+  Object.keys(options.fields).forEach((key) => Object.assign(options.fields[key], fields[key]));
+};

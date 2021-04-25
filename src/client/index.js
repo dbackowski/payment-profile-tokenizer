@@ -1,7 +1,11 @@
 import IframesMessages from '../shared/IframeMessages';
-import { setStylesOnElement, createIframe, getHostOrigin } from '../shared/helpers';
+import {
+  setStylesOnElement,
+  createIframe,
+  getHostOrigin,
+  mergeOptionsWithOptionsForType,
+} from '../shared/helpers';
 import optionsValidator from '../shared/optionsValidator';
-import mergeOptionsWithOptionsForType from '../shared/mergeOptionsWithOptionsForType';
 
 export default class Client extends IframesMessages {
   static mainIframeName = 'mainIframe';
@@ -41,7 +45,7 @@ export default class Client extends IframesMessages {
     } = optionsValidator.validate(options);
 
     if (optionsValid) {
-      mergeOptionsWithOptionsForType.merge(options);
+      mergeOptionsWithOptionsForType(options);
       this.sendMessageToMainIframe({ action: 'SET_OPTIONS', data: this.dataForIframe(Client.mainIframeName) });
 
       await this.createFields();
