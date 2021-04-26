@@ -2,7 +2,7 @@ import IframesMessages from '../shared/IframeMessages';
 import Client from '../client';
 import InputHtmlGenerator from '../shared/inputHtmlGenerator';
 import InputFormatter from '../shared/inputFormatter';
-import { setStylesOnElement } from '../shared/helpers';
+import { setStylesOnElement } from '../shared/helpers.ts';
 
 class Field extends IframesMessages {
   options = {};

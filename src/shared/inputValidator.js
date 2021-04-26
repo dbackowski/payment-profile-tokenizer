@@ -1,4 +1,4 @@
-import { lunCheck } from './helpers';
+import { lunCheck } from './helpers.ts';
 
 export default class InputValidator {
   static AVAILABLE_VALIDATORS = {

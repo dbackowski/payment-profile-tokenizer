@@ -1,4 +1,4 @@
-import { setStylesOnElement } from './helpers';
+import { setStylesOnElement } from './helpers.ts';
 
 export default class InputHtmlGenerator {
   fieldName;
