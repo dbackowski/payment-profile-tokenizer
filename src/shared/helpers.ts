@@ -1,10 +1,42 @@
 import fieldsForType from './fieldsForType';
 
-export const setStylesOnElement = (element, styles) => {
+interface elementWithStyle {
+  style: object;
+}
+
+interface onLoadCallback {
+  (iframe: HTMLIFrameElement): void;
+}
+
+interface iframeOptions {
+  src: string;
+  fieldName: string;
+  styles: object;
+  onLoadCallback: onLoadCallback;
+  elementToAppendIframeTo: HTMLIFrameElement;
+}
+
+interface fields {
+  [key:string]: field;
+}
+
+interface field {
+  selector: string,
+  label: string,
+  placeholder?: string,
+  style: object;
+}
+
+interface options {
+  type: string;
+  fields: fields;
+}
+
+export const setStylesOnElement = (element:elementWithStyle, styles:object) => {
   Object.assign(element.style, styles);
 };
 
-export const createIframe = (options = {}) => new Promise((resolve) => {
+export const createIframe = (options:iframeOptions) => new Promise((resolve) => {
   const iframe = document.createElement('iframe');
 
   iframe.src = options.src;
@@ -15,15 +47,15 @@ export const createIframe = (options = {}) => new Promise((resolve) => {
 
   iframe.onload = () => {
     options.onLoadCallback(iframe);
-    resolve();
+    resolve(`Successfully loaded: ${iframe}`);
   };
 
   options.elementToAppendIframeTo.appendChild(iframe);
 });
 
-export const lunCheck = (creditCardNumber) => {
-  const result = ((arr) => {
-    const check = (ccNum) => {
+export const lunCheck = (creditCardNumber:string) => {
+  const result = ((arr:number[]) => {
+    const check = (ccNum:string) => {
       let len = ccNum.length;
       let bit = 1;
       let sum = 0;
@@ -45,7 +77,7 @@ export const lunCheck = (creditCardNumber) => {
 
 export const getHostOrigin = () => window.location.origin;
 
-export const mergeOptionsWithOptionsForType = (options) => {
+export const mergeOptionsWithOptionsForType = (options:options) => {
   const fields = fieldsForType.fields(options.type);
   Object.keys(options.fields).forEach((key) => Object.assign(options.fields[key], fields[key]));
 };

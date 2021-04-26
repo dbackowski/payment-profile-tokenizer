@@ -4,7 +4,7 @@ import {
   createIframe,
   getHostOrigin,
   mergeOptionsWithOptionsForType,
-} from '../shared/helpers';
+} from '../shared/helpers.ts';
 import optionsValidator from '../shared/optionsValidator';
 
 export default class Client extends IframesMessages {
