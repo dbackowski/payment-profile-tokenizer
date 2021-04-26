@@ -1,42 +1,38 @@
 import fieldsForType from './fieldsForType';
 
-interface elementWithStyle {
-  style: object;
-}
-
-interface onLoadCallback {
+interface OnLoadCallback {
   (iframe: HTMLIFrameElement): void;
 }
 
-interface iframeOptions {
+interface IframeOptions {
   src: string;
   fieldName: string;
   styles: object;
-  onLoadCallback: onLoadCallback;
+  onLoadCallback: OnLoadCallback;
   elementToAppendIframeTo: HTMLIFrameElement;
 }
 
-interface fields {
-  [key:string]: field;
+interface Fields {
+  [key:string]: Field;
 }
 
-interface field {
+interface Field {
   selector: string,
   label: string,
   placeholder?: string,
   style: object;
 }
 
-interface options {
+interface Options {
   type: string;
-  fields: fields;
+  fields: Fields;
 }
 
-export const setStylesOnElement = (element:elementWithStyle, styles:object) => {
+export const setStylesOnElement = (element:HTMLElement, styles:object) => {
   Object.assign(element.style, styles);
 };
 
-export const createIframe = (options:iframeOptions) => new Promise((resolve) => {
+export const createIframe = (options:IframeOptions) => new Promise((resolve) => {
   const iframe = document.createElement('iframe');
 
   iframe.src = options.src;
@@ -77,7 +73,7 @@ export const lunCheck = (creditCardNumber:string) => {
 
 export const getHostOrigin = () => window.location.origin;
 
-export const mergeOptionsWithOptionsForType = (options:options) => {
+export const mergeOptionsWithOptionsForType = (options:Options) => {
   const fields = fieldsForType.fields(options.type);
   Object.keys(options.fields).forEach((key) => Object.assign(options.fields[key], fields[key]));
 };
