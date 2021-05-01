@@ -1,4 +1,4 @@
-import fieldsForType from './fieldsForType';
+import fieldsForType from './fieldsForType.ts';
 
 export default class OptionsValidator {
   static validate(options = {}) {

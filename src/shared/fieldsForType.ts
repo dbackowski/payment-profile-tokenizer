@@ -1,5 +1,18 @@
+interface Field {
+  [key:string]: {
+    validator?: string;
+    inputFormat? :string;
+  }
+}
+
+interface Fields {
+  [key:string]: {
+    [fields:string]: Field;
+  }
+}
+
 export default class fieldsForType {
-  static FIELDS_FOR_TYPES = {
+  static FIELDS_FOR_TYPES:Fields = {
     creditCard: {
       fields: {
         firstName: {
@@ -28,11 +41,11 @@ export default class fieldsForType {
     },
   }
 
-  static fields(type) {
+  static fields(type:string): Field {
     return fieldsForType.FIELDS_FOR_TYPES[type].fields;
   }
 
-  static supportedTypes() {
+  static supportedTypes(): string[] {
     return Object.keys(fieldsForType.FIELDS_FOR_TYPES);
   }
 }

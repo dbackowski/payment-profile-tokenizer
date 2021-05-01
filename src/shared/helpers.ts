@@ -52,10 +52,10 @@ export const createIframe = (options:IframeOptions) => new Promise((resolve) => 
 export const lunCheck = (creditCardNumber:string) => {
   const result = ((arr:number[]) => {
     const check = (ccNum:string) => {
-      let len = ccNum.length;
-      let bit = 1;
-      let sum = 0;
-      let val;
+      let len:number = ccNum.length;
+      let bit:number = 1;
+      let sum:number = 0;
+      let val:number;
 
       while (len) {
         val = parseInt(ccNum.charAt(len -= 1), 10);
@@ -71,7 +71,7 @@ export const lunCheck = (creditCardNumber:string) => {
   return result(creditCardNumber);
 };
 
-export const getHostOrigin = () => window.location.origin;
+export const getHostOrigin = (): string => window.location.origin;
 
 export const mergeOptionsWithOptionsForType = (options:Options) => {
   const fields = fieldsForType.fields(options.type);
