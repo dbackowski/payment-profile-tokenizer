@@ -1,7 +1,7 @@
 import IframesMessages from '../shared/IframeMessages';
 import Client from '../client';
 import InputHtmlGenerator from '../shared/inputHtmlGenerator';
-import InputFormatter from '../shared/inputFormatter';
+import InputFormatter from '../shared/inputFormatter.ts';
 import { setStylesOnElement } from '../shared/helpers.ts';
 
 class Field extends IframesMessages {
