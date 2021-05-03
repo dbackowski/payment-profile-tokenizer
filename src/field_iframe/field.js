@@ -1,6 +1,6 @@
 import IframesMessages from '../shared/IframeMessages';
 import Client from '../client';
-import InputHtmlGenerator from '../shared/inputHtmlGenerator';
+import InputHtmlGenerator from '../shared/inputHtmlGenerator.ts';
 import InputFormatter from '../shared/inputFormatter.ts';
 import { setStylesOnElement } from '../shared/helpers.ts';
 

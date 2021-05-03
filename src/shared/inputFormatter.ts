@@ -15,17 +15,16 @@ export default class InputFormatter {
     cvc: InputFormatter.cvcFormat,
   };
 
-  static format(type:string, element:HTMLInputElement): FormatResult | HTMLInputElement {
+  static format(type:string, element:HTMLInputElement): FormatResult {
     const formatMethod = InputFormatter.AVAILABLE_FORMATS[type];
+    const carretPosition = element.selectionStart;
 
-    if (!formatMethod) return element;
+    if (!formatMethod) return { value: element.value, carretPosition: carretPosition };
 
-    return formatMethod.call(this, element);
+    return formatMethod.call(this, element, carretPosition);
   }
 
-  static creditCardFormat(element:HTMLInputElement): FormatResult {
-    let carretPosition = element.selectionStart;
-
+  static creditCardFormat(element:HTMLInputElement, carretPosition:number): FormatResult {
     const value = element.value.replace(new RegExp(/[^\d]/, 'ig'), '')
       .slice(0, 16)
       .split(/([0-9]{4})/g)
@@ -39,23 +38,20 @@ export default class InputFormatter {
     return { value, carretPosition };
   }
 
-  static monthFormat(element:HTMLInputElement): FormatResult {
+  static monthFormat(element:HTMLInputElement, carretPosition:number): FormatResult {
     const value = element.value.replace(new RegExp(/[^\d]/, 'ig'), '').slice(0, 2);
-    const carretPosition = element.selectionStart;
 
     return { value, carretPosition };
   }
 
-  static yearFormat(element:HTMLInputElement): FormatResult {
+  static yearFormat(element:HTMLInputElement, carretPosition:number): FormatResult {
     const value = element.value.replace(new RegExp(/[^\d]/, 'ig'), '').slice(0, 4);
-    const carretPosition = element.selectionStart;
 
     return { value, carretPosition };
   }
 
-  static cvcFormat(element:HTMLInputElement): FormatResult {
+  static cvcFormat(element:HTMLInputElement, carretPosition:number): FormatResult {
     const value = element.value.replace(new RegExp(/[^\d]/, 'ig'), '').slice(0, 4);
-    const carretPosition = element.selectionStart;
 
     return { value, carretPosition };
   }

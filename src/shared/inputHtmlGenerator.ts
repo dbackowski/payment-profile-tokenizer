@@ -11,8 +11,8 @@ interface Options {
   fieldLabel: string;
   options?: Option[];
   styles: {
-    label: object
-    field: object
+    label: object;
+    field: object;
   };
 }
 
