@@ -1,16 +1,36 @@
-import { setStylesOnElement } from './helpers.ts';
+import { setStylesOnElement } from './helpers';
+
+interface Option {
+  value:string;
+  text:string;
+}
+
+interface Options {
+  placeholder: string
+  type: string;
+  fieldLabel: string;
+  options?: Option[];
+  styles: {
+    label: object
+    field: object
+  };
+}
+
+interface InputTypes {
+  [key: string]: Function;
+}
 
 export default class InputHtmlGenerator {
   fieldName;
 
-  options = {};
+  options:Options;
 
-  inputTypes = {
+  inputTypes:InputTypes = {
     text: this.inputTypeText,
     select: this.inputTypeSelect,
   }
 
-  constructor(fieldName, options = {}) {
+  constructor(fieldName:string, options:Options) {
     this.fieldName = fieldName;
     this.options = options;
   }
@@ -62,7 +82,7 @@ export default class InputHtmlGenerator {
 
     input.add(placeholderOption);
 
-    this.options.options.forEach((option) => {
+    this.options.options!.forEach((option) => {
       const optionElem = document.createElement('option');
 
       optionElem.value = option.value;

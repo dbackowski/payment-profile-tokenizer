@@ -18,8 +18,6 @@ export default class InputFormatter {
   static format(type:string, element:HTMLInputElement): FormatResult | HTMLInputElement {
     const formatMethod = InputFormatter.AVAILABLE_FORMATS[type];
 
-    console.log(typeof formatMethod);
-
     if (!formatMethod) return element;
 
     return formatMethod.call(this, element);
