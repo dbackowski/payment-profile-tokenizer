@@ -5,7 +5,7 @@ import {
   getHostOrigin,
   mergeOptionsWithOptionsForType,
 } from '../shared/helpers.ts';
-import optionsValidator from '../shared/optionsValidator';
+import optionsValidator from '../shared/optionsValidator.ts';
 
 export default class Client extends IframesMessages {
   static mainIframeName = 'mainIframe';
