@@ -17,14 +17,16 @@ interface Fields {
 }
 
 interface Field {
-  selector: string,
-  label: string,
-  placeholder?: string,
+  selector: string;
+  label: string;
+  placeholder?: string;
   style: object;
+  liveValidation: boolean;
 }
 
 interface Options {
   type: string;
+  liveValidation?: boolean;
   fields: Fields;
 }
 
@@ -75,5 +77,9 @@ export const getHostOrigin = (): string => window.location.origin;
 
 export const mergeOptionsWithOptionsForType = (options:Options) => {
   const fields = fieldsForType.fields(options.type);
-  Object.keys(options.fields).forEach((key) => Object.assign(options.fields[key], fields[key]));
+
+  Object.keys(options.fields).forEach((key) => {
+    options.fields[key].liveValidation = !!options.liveValidation;
+    Object.assign(options.fields[key], fields[key])
+  });
 };

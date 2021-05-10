@@ -9,6 +9,7 @@ class Main extends IframesMessages {
   receivedMessageToMethod = {
     SET_OPTIONS: { method: this.setOptions, skipOriginCheck: true },
     FIELD_VALUE: { method: this.receivedFieldValue },
+    LIVE_VALIDATE_FIELD: { method: this.liveValidateField },
     TOKENIZE: { method: this.tokenize, skipOriginCheck: true },
   };
 
@@ -35,19 +36,26 @@ class Main extends IframesMessages {
   }
 
   validateFields() {
-    return Object.keys(this.options.fields).map((fieldName) => {
-      const validationResult = InputValidator.validate(
-        this.options.fields[fieldName].validator,
-        fieldName,
-        this.fieldsValues,
-      );
+    return Object.keys(this.options.fields).map((fieldName) => this.validateField(fieldName));
+  }
 
-      return { fieldName, ...validationResult };
-    });
+  validateField(fieldName) {
+    const validationResult = InputValidator.validate(
+      this.options.fields[fieldName].validator,
+      fieldName,
+      this.fieldsValues,
+    );
+
+    return { fieldName, ...validationResult };
   }
 
   static allFieldsAreValid(validationResults) {
     return validationResults.every((result) => result.valid);
+  }
+
+  liveValidateField(message) {
+    const validationResults = new Array(this.validateField(message.data.fieldName));
+    this.showErrorMessageForInvalidFields(validationResults);
   }
 
   sendInvalidFieldsToClient(validationResults) {

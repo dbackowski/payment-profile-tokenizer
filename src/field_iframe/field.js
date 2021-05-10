@@ -61,6 +61,10 @@ class Field extends IframesMessages {
 
     elem.addEventListener('keyup', this.sendFieldValueToMainIframe.bind(this));
 
+    if (this.options[this.fieldName()].liveValidation) {
+      elem.querySelector('.input').addEventListener('blur', this.liveValidateField.bind(this));
+    }
+
     document.body.appendChild(elem);
     this.sendInputSizeToClient();
   }
@@ -86,6 +90,13 @@ class Field extends IframesMessages {
     window.top.postMessage(message, this.options.hostOrigin);
   }
 
+  sendMessageToMainIframe(message) {
+    const mainIframe = window.top.frames[Client.mainIframeName];
+    if (mainIframe.origin !== this.options.hostOrigin) return;
+
+    mainIframe.postMessage(message, this.options.hostOrigin);
+  }
+
   formatInput(event) {
     const inputElem = document.querySelector(`#${this.fieldName()}`);
     const { value, carretPosition } = InputFormatter.format(this.getInputFormat(), event.target);
@@ -94,9 +105,6 @@ class Field extends IframesMessages {
   }
 
   sendFieldValueToMainIframe() {
-    const mainIframe = window.top.frames[Client.mainIframeName];
-    if (mainIframe.origin !== this.options.hostOrigin) return;
-
     const { value } = document.querySelector(`#${this.fieldName()}`);
     const message = {
       action: 'FIELD_VALUE',
@@ -106,7 +114,20 @@ class Field extends IframesMessages {
       },
     };
 
-    mainIframe.postMessage(message, this.options.hostOrigin);
+    this.sendMessageToMainIframe(message);
+  }
+
+  liveValidateField(event) {
+    const { name } = event.target;
+
+    if (!name) return;
+
+    const message = {
+      action: 'LIVE_VALIDATE_FIELD',
+      data: { fieldName: name },
+    };
+
+    this.sendMessageToMainIframe(message);
   }
 
   markFieldAsInvalid() {
