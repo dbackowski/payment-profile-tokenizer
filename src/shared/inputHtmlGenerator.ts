@@ -35,7 +35,7 @@ export default class InputHtmlGenerator {
     this.options = options;
   }
 
-  output() {
+  output(): HTMLDivElement {
     const div = document.createElement('div');
     const input = this.inputForType();
     const errorMsgDiv = document.createElement('div');
@@ -55,11 +55,11 @@ export default class InputHtmlGenerator {
     return div;
   }
 
-  inputForType() {
+  inputForType(): HTMLInputElement | HTMLSelectElement {
     return this.inputTypes[this.options.type].call(this);
   }
 
-  inputTypeText() {
+  inputTypeText(): HTMLInputElement {
     const input = document.createElement('input');
 
     input.id = this.fieldName;
@@ -71,7 +71,7 @@ export default class InputHtmlGenerator {
     return input;
   }
 
-  inputTypeSelect() {
+  inputTypeSelect(): HTMLSelectElement {
     const input = document.createElement('select');
 
     const placeholderOption = document.createElement('option');
