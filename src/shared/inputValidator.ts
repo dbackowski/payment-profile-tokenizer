@@ -1,14 +1,31 @@
-import { lunCheck } from './helpers.ts';
+import { lunCheck } from './helpers';
+
+interface FieldValues {
+  [key:string]: string;
+}
+
+interface AvailableValidators {
+  [key:string]: Function;
+}
+
+interface ErrorMessages {
+  [key:string]: string;
+}
+
+interface ValidationResult {
+  valid: boolean;
+  errorMessage: string;
+}
 
 export default class InputValidator {
-  static AVAILABLE_VALIDATORS = {
+  static AVAILABLE_VALIDATORS: AvailableValidators = {
     notEmpty: InputValidator.notEmpty,
     expirationMonth: InputValidator.expirationMonth,
     expirationYear: InputValidator.expirationYear,
     creditCardNumber: InputValidator.creditCardNumber,
   };
 
-  static ERROR_MESSAGES = {
+  static ERROR_MESSAGES: ErrorMessages = {
     NOT_EMPTY_ERROR_MESSAGE: 'Field can not be empty',
     EXPIRATION_MONTH_IN_PAST: 'Month can not be in the past',
     EXPIRATION_MONTH_NOT_VALID: 'Month is invalid',
@@ -16,19 +33,19 @@ export default class InputValidator {
     CREDIT_CARD_NUMBER_NOT_VALID: 'Credit card number is invalid',
   }
 
-  static validate(validator, fieldName, fieldsValues) {
+  static validate(validator:string, fieldName:string, fieldsValues:FieldValues): ValidationResult {
     const validatorMethod = InputValidator.AVAILABLE_VALIDATORS[validator];
 
     return validatorMethod.call(this, fieldsValues[fieldName], fieldsValues);
   }
 
-  static notEmpty(fieldValue) {
+  static notEmpty(fieldValue: string): ValidationResult {
     const valid = fieldValue != null && fieldValue !== '';
 
     return { valid, errorMessage: InputValidator.ERROR_MESSAGES.NOT_EMPTY_ERROR_MESSAGE };
   }
 
-  static expirationMonth(fieldValue, fieldsValues) {
+  static expirationMonth(fieldValue:string, fieldsValues:FieldValues): ValidationResult {
     let { valid, errorMessage } = InputValidator.notEmpty(fieldValue);
     if (!valid) return { valid, errorMessage };
 
@@ -55,7 +72,7 @@ export default class InputValidator {
     return { valid, errorMessage };
   }
 
-  static expirationYear(fieldValue) {
+  static expirationYear(fieldValue:string): ValidationResult {
     let { valid, errorMessage } = InputValidator.notEmpty(fieldValue);
     if (!valid) return { valid, errorMessage };
 
@@ -67,7 +84,7 @@ export default class InputValidator {
     return { valid, errorMessage };
   }
 
-  static creditCardNumber(fieldValue) {
+  static creditCardNumber(fieldValue:string): ValidationResult {
     let { valid, errorMessage } = InputValidator.notEmpty(fieldValue);
     if (!valid) return { valid, errorMessage };
 
