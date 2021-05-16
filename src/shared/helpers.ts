@@ -51,7 +51,7 @@ export const createIframe = (options:IframeOptions) => new Promise((resolve) => 
   options.elementToAppendIframeTo.appendChild(iframe);
 });
 
-export const lunCheck = (creditCardNumber:string) => {
+export const lunCheck = (creditCardNumber:string): boolean => {
   const result = ((arr:number[]) => {
     const check = (ccNum:string) => {
       let len:number = ccNum.length;
@@ -64,7 +64,7 @@ export const lunCheck = (creditCardNumber:string) => {
         sum += (bit ^= 1) ? arr[val] : val; // eslint-disable-line no-cond-assign, no-bitwise
       }
 
-      return sum && sum % 10 === 0;
+      return (sum && sum % 10 === 0) as boolean;
     };
 
     return check;
