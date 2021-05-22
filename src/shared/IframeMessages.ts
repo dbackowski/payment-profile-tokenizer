@@ -1,3 +1,19 @@
+interface ReferenceForHandleReceivedMessage {
+  (event:MessageEvent): void;
+}
+
+interface Message {
+  action: string;
+  data: object;
+}
+
+interface ReceivedMessageToMethod {
+  [key:string]: {
+    method?: Function;
+    skipOriginCheck?: boolean;
+  }
+}
+
 export default class IframesMessages {
   /*
     Redeclare this in the inherited classes, it should be in the format of:
@@ -16,16 +32,16 @@ export default class IframesMessages {
       SET_OPTIONS: { method: this.setOptions, skipOriginCheck: true },
     }
   */
-  receivedMessageToMethod = {};
+  receivedMessageToMethod:ReceivedMessageToMethod = {};
 
-  referenceForHandleReceivedMessage;
+  referenceForHandleReceivedMessage:ReferenceForHandleReceivedMessage;
 
   allowedIframeOrigins = [
     'http://localhost:4000',
   ];
 
   constructor() {
-    this.referenceForHandleReceivedMessage = (event) => this.handleReceivedMessage(event);
+    this.referenceForHandleReceivedMessage = (message:MessageEvent) => this.handleReceivedMessage(message);
     this.startListeningOnMessages();
   }
 
@@ -37,29 +53,29 @@ export default class IframesMessages {
     window.removeEventListener('message', this.referenceForHandleReceivedMessage);
   }
 
-  handleReceivedMessage(message) {
+  handleReceivedMessage(message:MessageEvent) {
     const { method, skipOriginCheck } = this.methodForReceivedMessage(message.data);
 
     if (method == null) return;
-    if (!this.validOriginMessage(message, skipOriginCheck)) return;
+    if (!this.validOriginMessage(message, <boolean>skipOriginCheck)) return;
 
     method.call(this, message.data);
   }
 
-  methodForReceivedMessage(message) {
+  methodForReceivedMessage(message:Message) {
     if (!this.checkIfMethodExistForReceivedMessage(message)) return {};
 
     return this.receivedMessageToMethod[message.action];
   }
 
-  checkIfMethodExistForReceivedMessage(message) {
+  checkIfMethodExistForReceivedMessage(message:Message) {
     if (message.action == null) return false;
 
     return this.receivedMessageToMethod[message.action]
       && this.receivedMessageToMethod[message.action].method;
   }
 
-  validOriginMessage(message, skipOriginCheck) {
+  validOriginMessage(message:MessageEvent, skipOriginCheck:boolean) {
     if (skipOriginCheck) return true;
 
     return this.allowedIframeOrigins.includes(message.origin);
