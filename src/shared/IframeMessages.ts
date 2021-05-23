@@ -8,10 +8,12 @@ interface Message {
 }
 
 interface ReceivedMessageToMethod {
-  [key:string]: {
-    method?: Function;
-    skipOriginCheck?: boolean;
-  }
+  [key:string]: MessageToMethod
+}
+
+interface MessageToMethod {
+  method?: Function;
+  skipOriginCheck?: boolean;
 }
 
 export default class IframesMessages {
@@ -62,20 +64,20 @@ export default class IframesMessages {
     method.call(this, message.data);
   }
 
-  methodForReceivedMessage(message:Message) {
+  methodForReceivedMessage(message:Message): MessageToMethod {
     if (!this.checkIfMethodExistForReceivedMessage(message)) return {};
 
     return this.receivedMessageToMethod[message.action];
   }
 
-  checkIfMethodExistForReceivedMessage(message:Message) {
+  checkIfMethodExistForReceivedMessage(message:Message): boolean {
     if (message.action == null) return false;
+    if (!this.receivedMessageToMethod[message.action]) return false;
 
-    return this.receivedMessageToMethod[message.action]
-      && this.receivedMessageToMethod[message.action].method;
+    return !!this.receivedMessageToMethod[message.action].method;
   }
 
-  validOriginMessage(message:MessageEvent, skipOriginCheck:boolean) {
+  validOriginMessage(message:MessageEvent, skipOriginCheck:boolean): boolean {
     if (skipOriginCheck) return true;
 
     return this.allowedIframeOrigins.includes(message.origin);
