@@ -28,12 +28,6 @@ interface MessageForLiveValidate {
 }
 
 interface Field {
-  selector: string;
-  label: string;
-  placeholder?: string;
-  style: object;
-  liveValidation: boolean;
-
   validator: string;
 }
 
