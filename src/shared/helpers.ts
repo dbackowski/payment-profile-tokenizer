@@ -34,13 +34,14 @@ export const setStylesOnElement = (element:HTMLElement, styles:object) => {
   Object.assign(element.style, styles);
 };
 
-export const createIframe = (options:IframeOptions) => new Promise((resolve) => {
+export const createIframe = (options:IframeOptions): Promise<string> => new Promise((resolve) => {
   const iframe = document.createElement('iframe');
 
   iframe.src = options.src;
   iframe.id = options.fieldName;
   iframe.name = options.fieldName;
-  iframe.sandbox = 'allow-scripts allow-same-origin';
+  iframe.sandbox.add('allow-scripts')
+  iframe.sandbox.add('allow-same-origin');
   setStylesOnElement(iframe, options.styles);
 
   iframe.onload = () => {

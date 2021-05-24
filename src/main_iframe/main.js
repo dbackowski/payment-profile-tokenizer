@@ -1,4 +1,4 @@
-import IframesMessages from '../shared/IframeMessages';
+import IframesMessages from '../shared/IframeMessages.ts';
 import InputValidator from '../shared/inputValidator.ts';
 
 class Main extends IframesMessages {

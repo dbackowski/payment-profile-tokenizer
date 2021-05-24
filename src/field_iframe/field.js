@@ -1,4 +1,4 @@
-import IframesMessages from '../shared/IframeMessages';
+import IframesMessages from '../shared/IframeMessages.ts';
 import Client from '../client';
 import InputHtmlGenerator from '../shared/inputHtmlGenerator.ts';
 import InputFormatter from '../shared/inputFormatter.ts';
