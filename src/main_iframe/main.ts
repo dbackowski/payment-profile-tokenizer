@@ -1,10 +1,59 @@
-import IframesMessages from '../shared/IframeMessages.ts';
-import InputValidator from '../shared/inputValidator.ts';
+import IframesMessages from '../shared/IframeMessages';
+import InputValidator from '../shared/inputValidator';
+
+interface FieldValues {
+  [key:string]: string;
+}
+
+interface FieldValueData {
+  fieldName: string;
+  value: string;
+}
+
+interface MessageForFieldValue {
+  action: string;
+  data: FieldValueData;
+}
+
+interface MessageForOptions {
+  action: string;
+  data: Options;
+}
+
+interface MessageForLiveValidate {
+  action: string;
+  data: {
+    fieldName: string;
+  }
+}
+
+interface Field {
+  selector: string;
+  label: string;
+  placeholder?: string;
+  style: object;
+  liveValidation: boolean;
+
+  validator: string;
+}
+
+interface Options {
+  fields: {
+    [key:string]: Field
+  };
+  hostOrigin: string;
+}
+
+interface ValidationResult {
+  fieldName: string;
+  valid: boolean;
+  errorMessage: string;
+}
 
 class Main extends IframesMessages {
-  options = {}
+  options:Options = { fields: {}, hostOrigin: '' }
 
-  fieldsValues = {};
+  fieldsValues:FieldValues = {};
 
   receivedMessageToMethod = {
     SET_OPTIONS: { method: this.setOptions, skipOriginCheck: true },
@@ -13,11 +62,11 @@ class Main extends IframesMessages {
     TOKENIZE: { method: this.tokenize, skipOriginCheck: true },
   };
 
-  setOptions(message) {
+  setOptions(message:MessageForOptions) {
     this.options = message.data;
   }
 
-  receivedFieldValue(message) {
+  receivedFieldValue(message:MessageForFieldValue) {
     this.fieldsValues[message.data.fieldName] = message.data.value;
   }
 
@@ -35,11 +84,12 @@ class Main extends IframesMessages {
     }
   }
 
-  validateFields() {
-    return Object.keys(this.options.fields).map((fieldName) => this.validateField(fieldName));
+  validateFields():ValidationResult[] {
+    const fields = this.options.fields ?? {};
+    return Object.keys(fields).map((fieldName) => this.validateField(fieldName));
   }
 
-  validateField(fieldName) {
+  validateField(fieldName:string) {
     const validationResult = InputValidator.validate(
       this.options.fields[fieldName].validator,
       fieldName,
@@ -49,16 +99,16 @@ class Main extends IframesMessages {
     return { fieldName, ...validationResult };
   }
 
-  static allFieldsAreValid(validationResults) {
+  static allFieldsAreValid(validationResults:ValidationResult[]) {
     return validationResults.every((result) => result.valid);
   }
 
-  liveValidateField(message) {
+  liveValidateField(message:MessageForLiveValidate) {
     const validationResults = new Array(this.validateField(message.data.fieldName));
     this.showErrorMessageForInvalidFields(validationResults);
   }
 
-  sendInvalidFieldsToClient(validationResults) {
+  sendInvalidFieldsToClient(validationResults:ValidationResult[]) {
     const invalidFields = validationResults.filter((result) => !result.valid).map((result) => (
       { fieldName: result.fieldName, errorMessage: result.errorMessage }
     ));
@@ -68,7 +118,7 @@ class Main extends IframesMessages {
     }
   }
 
-  showErrorMessageForInvalidFields(validationResults) {
+  showErrorMessageForInvalidFields(validationResults:ValidationResult[]) {
     validationResults.forEach((result) => {
       let message;
 
@@ -82,16 +132,16 @@ class Main extends IframesMessages {
     });
   }
 
-  sendMessageToIframe(fieldName, message) {
-    const iframe = window.top.frames[fieldName];
+  sendMessageToIframe(fieldName:string, message:object) {
+    const iframe = (window.top.frames as any)[fieldName];
     if (iframe.origin !== this.options.hostOrigin) return;
 
     iframe.postMessage(message, this.options.hostOrigin);
   }
 
-  sendMessageToClient(message) {
+  sendMessageToClient(message:object) {
     window.top.postMessage(message, this.options.hostOrigin);
   }
 }
 
-window.Main = Main;
+(window as any).Main = Main;

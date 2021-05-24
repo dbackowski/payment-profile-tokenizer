@@ -6,7 +6,7 @@ module.exports = {
   entry: {
     client: ['./src/client/index.js'],
     field: ['./src/field_iframe/field.js'],
-    main: ['./src/main_iframe/main.js'],
+    main: ['./src/main_iframe/main.ts'],
   },
   output: {
     filename: '[name].js',
