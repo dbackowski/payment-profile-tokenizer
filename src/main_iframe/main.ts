@@ -78,12 +78,12 @@ class Main extends IframesMessages {
     }
   }
 
-  validateFields():ValidationResult[] {
+  validateFields(): ValidationResult[] {
     const fields = this.options.fields ?? {};
     return Object.keys(fields).map((fieldName) => this.validateField(fieldName));
   }
 
-  validateField(fieldName:string) {
+  validateField(fieldName:string): ValidationResult {
     const validationResult = InputValidator.validate(
       this.options.fields[fieldName].validator,
       fieldName,
@@ -93,7 +93,7 @@ class Main extends IframesMessages {
     return { fieldName, ...validationResult };
   }
 
-  static allFieldsAreValid(validationResults:ValidationResult[]) {
+  static allFieldsAreValid(validationResults:ValidationResult[]): boolean {
     return validationResults.every((result) => result.valid);
   }
 
