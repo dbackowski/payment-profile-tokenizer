@@ -34,11 +34,11 @@ export default class IframesMessages {
       SET_OPTIONS: { method: this.setOptions, skipOriginCheck: true },
     }
   */
-  receivedMessageToMethod:ReceivedMessageToMethod = {};
+  protected receivedMessageToMethod:ReceivedMessageToMethod = {};
 
-  referenceForHandleReceivedMessage:ReferenceForHandleReceivedMessage;
+  private referenceForHandleReceivedMessage:ReferenceForHandleReceivedMessage;
 
-  allowedIframeOrigins = [
+  private allowedIframeOrigins = [
     'http://localhost:4000',
   ];
 
@@ -47,15 +47,15 @@ export default class IframesMessages {
     this.startListeningOnMessages();
   }
 
-  startListeningOnMessages() {
+  private startListeningOnMessages() {
     window.addEventListener('message', this.referenceForHandleReceivedMessage);
   }
 
-  stopListeningOnMessages() {
+  private stopListeningOnMessages() {
     window.removeEventListener('message', this.referenceForHandleReceivedMessage);
   }
 
-  handleReceivedMessage(message:MessageEvent) {
+  private handleReceivedMessage(message:MessageEvent) {
     const { method, skipOriginCheck } = this.methodForReceivedMessage(message.data);
 
     if (method == null) return;
@@ -64,20 +64,20 @@ export default class IframesMessages {
     method.call(this, message.data);
   }
 
-  methodForReceivedMessage(message:Message): MessageToMethod {
+  private methodForReceivedMessage(message:Message): MessageToMethod {
     if (!this.checkIfMethodExistForReceivedMessage(message)) return {};
 
     return this.receivedMessageToMethod[message.action];
   }
 
-  checkIfMethodExistForReceivedMessage(message:Message): boolean {
+  private checkIfMethodExistForReceivedMessage(message:Message): boolean {
     if (message.action == null) return false;
     if (!this.receivedMessageToMethod[message.action]) return false;
 
     return !!this.receivedMessageToMethod[message.action].method;
   }
 
-  validOriginMessage(message:MessageEvent, skipOriginCheck:boolean): boolean {
+  private validOriginMessage(message:MessageEvent, skipOriginCheck:boolean): boolean {
     if (skipOriginCheck) return true;
 
     return this.allowedIframeOrigins.includes(message.origin);

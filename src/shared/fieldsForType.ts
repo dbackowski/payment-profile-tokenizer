@@ -26,11 +26,11 @@ export default class fieldsForType {
           validator: 'creditCardNumber',
         },
         expirationMonth: {
-          inputFormat: 'Month',
+          inputFormat: 'month',
           validator: 'expirationMonth',
         },
         expirationYear: {
-          inputFormat: 'Year',
+          inputFormat: 'year',
           validator: 'expirationYear',
         },
         cvv: {
