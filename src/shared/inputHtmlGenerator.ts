@@ -21,11 +21,11 @@ interface InputTypes {
 }
 
 export default class InputHtmlGenerator {
-  fieldName;
+  private fieldName;
 
-  options:Options;
+  private options:Options;
 
-  inputTypes:InputTypes = {
+  private inputTypes:InputTypes = {
     text: this.inputTypeText,
     select: this.inputTypeSelect,
   }
@@ -55,11 +55,11 @@ export default class InputHtmlGenerator {
     return div;
   }
 
-  inputForType(): HTMLInputElement | HTMLSelectElement {
+  private inputForType(): HTMLInputElement | HTMLSelectElement {
     return this.inputTypes[this.options.type].call(this);
   }
 
-  inputTypeText(): HTMLInputElement {
+  private inputTypeText(): HTMLInputElement {
     const input = document.createElement('input');
 
     input.id = this.fieldName;
@@ -71,7 +71,7 @@ export default class InputHtmlGenerator {
     return input;
   }
 
-  inputTypeSelect(): HTMLSelectElement {
+  private inputTypeSelect(): HTMLSelectElement {
     const input = document.createElement('select');
 
     const placeholderOption = document.createElement('option');
