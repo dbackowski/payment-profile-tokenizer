@@ -4,15 +4,14 @@ interface Option {
   value:string;
   text:string;
 }
-
 interface Options {
-  placeholder: string
-  type: string;
   fieldLabel: string;
-  options?: Option[];
+  type: string;
+  placeholder: string;
+  options: Option[];
   styles: {
-    label: object;
     field: object;
+    label: object;
   };
 }
 

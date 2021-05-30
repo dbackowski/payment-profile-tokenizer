@@ -1,15 +1,46 @@
-import IframesMessages from '../shared/IframeMessages.ts';
+import IframesMessages from '../shared/IframeMessages';
 import Client from '../client';
-import InputHtmlGenerator from '../shared/inputHtmlGenerator.ts';
-import InputFormatter from '../shared/inputFormatter.ts';
-import { setStylesOnElement } from '../shared/helpers.ts';
+import InputHtmlGenerator from '../shared/inputHtmlGenerator';
+import InputFormatter from '../shared/inputFormatter';
+import { setStylesOnElement } from '../shared/helpers';
+
+enum StyleKeys {
+  label = 'label',
+  labelInvalid = 'labelInvalid',
+  field = 'field',
+  fieldInvalid = 'fieldInvalid',
+}
+
+interface Field {
+  style: {
+    [key in StyleKeys]: object;
+  };
+  label: string;
+  inputFormat: string;
+  type: string;
+  placeholder: string;
+}
+
+interface Options {
+  [key:string]: Field;
+  //hostOrigin: string;
+}
+
+interface OptionsForHtmlGenerator {
+  fieldLabel: string;
+  type: string;
+  options: Options;
+  placeholder: string;
+  styles: {
+    field: object;
+    label: object;
+  };
+}
 
 class Field extends IframesMessages {
-  options = {};
+  private options:Options = { };
 
-  fieldsValues = {};
-
-  receivedMessageToMethod = {
+  protected receivedMessageToMethod = {
     SET_OPTIONS: {
       method: this.setOptions,
       skipOriginCheck: true,
@@ -22,23 +53,25 @@ class Field extends IframesMessages {
     HIDE_ERROR_MESSAGE: { method: this.hideErrorMessage },
   };
 
-  fieldName() {
+  private fieldName() {
     return Object.keys(this.options)[0];
   }
 
-  getStyleFor(element) {
+  // TODO: refactor
+  private getStyleFor(element: 'label'|'labelInvalid'|'field'|'fieldInvalid') {
+    this.options[this.fieldName()]?.style.label;
     return this.options[this.fieldName()]?.style[element] || {};
   }
 
-  getFieldLabel() {
+  private getFieldLabel(): string {
     return this.options[this.fieldName()].label;
   }
 
-  getInputFormat() {
+  private getInputFormat(): string {
     return this.options[this.fieldName()].inputFormat;
   }
 
-  optionsForHtmlGenerator() {
+  private optionsForHtmlGenerator(): OptionsForHtmlGenerator {
     return {
       fieldLabel: this.getFieldLabel(),
       type: this.options[this.fieldName()].type || 'text',
@@ -51,7 +84,7 @@ class Field extends IframesMessages {
     };
   }
 
-  createField() {
+  private createField() {
     const html = new InputHtmlGenerator(this.fieldName(), this.optionsForHtmlGenerator());
     const elem = html.output();
 
@@ -69,7 +102,7 @@ class Field extends IframesMessages {
     this.sendInputSizeToClient();
   }
 
-  sendInputSizeToClient() {
+  private sendInputSizeToClient() {
     this.sendMessageToClient({
       action: 'INPUT_SIZE',
       data: {
@@ -80,31 +113,31 @@ class Field extends IframesMessages {
     });
   }
 
-  setOptions(message) {
+  private setOptions(message: any) {
     this.options = message.data;
 
     this.createField();
   }
 
-  sendMessageToClient(message) {
+  private sendMessageToClient(message: any) {
     window.top.postMessage(message, this.options.hostOrigin);
   }
 
-  sendMessageToMainIframe(message) {
+  private sendMessageToMainIframe(message: any) {
     const mainIframe = window.top.frames[Client.mainIframeName];
     if (mainIframe.origin !== this.options.hostOrigin) return;
 
     mainIframe.postMessage(message, this.options.hostOrigin);
   }
 
-  formatInput(event) {
+  private formatInput(event) {
     const inputElem = document.querySelector(`#${this.fieldName()}`);
     const { value, carretPosition } = InputFormatter.format(this.getInputFormat(), event.target);
     inputElem.value = value;
     if (carretPosition) event.target.setSelectionRange(carretPosition, carretPosition);
   }
 
-  sendFieldValueToMainIframe() {
+  private sendFieldValueToMainIframe() {
     const { value } = document.querySelector(`#${this.fieldName()}`);
     const message = {
       action: 'FIELD_VALUE',
@@ -117,7 +150,7 @@ class Field extends IframesMessages {
     this.sendMessageToMainIframe(message);
   }
 
-  liveValidateField(event) {
+  private liveValidateField(event) {
     const { name } = event.target;
 
     if (!name) return;
@@ -130,7 +163,7 @@ class Field extends IframesMessages {
     this.sendMessageToMainIframe(message);
   }
 
-  markFieldAsInvalid() {
+  private markFieldAsInvalid() {
     const label = document.querySelector('label');
     const input = document.querySelector(`#${this.fieldName()}`);
 
@@ -138,7 +171,7 @@ class Field extends IframesMessages {
     setStylesOnElement(input, this.getStyleFor('fieldInvalid'));
   }
 
-  markFieldAsValid() {
+  private markFieldAsValid() {
     const label = document.querySelector('label');
     const input = document.querySelector(`#${this.fieldName()}`);
 
@@ -146,7 +179,7 @@ class Field extends IframesMessages {
     setStylesOnElement(input, this.getStyleFor('field'));
   }
 
-  hideErrorMessage() {
+  private hideErrorMessage() {
     this.markFieldAsValid();
     const errorElem = document.querySelector('.error-msg');
     if (errorElem.innerHTML.length === 0) return;
@@ -157,7 +190,7 @@ class Field extends IframesMessages {
     this.sendInputSizeToClient();
   }
 
-  showErrorMessage(message) {
+  private showErrorMessage(message) {
     this.markFieldAsInvalid();
     const errorElem = document.querySelector('.error-msg');
     if (errorElem.innerHTML.length !== 0) return;
@@ -169,4 +202,4 @@ class Field extends IframesMessages {
   }
 }
 
-window.Field = Field;
+(window as any).Field = Field;
