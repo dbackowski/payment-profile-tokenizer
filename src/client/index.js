@@ -122,7 +122,7 @@ export default class Client extends IframesMessages {
   dataForIframe(fieldName) {
     return Client.fieldNameIsMainIframe(fieldName)
       ? { fields: this.options.fields, hostOrigin: getHostOrigin() }
-      : { [fieldName]: this.options.fields[fieldName], hostOrigin: getHostOrigin() };
+      : { fieldName, fieldOptions: this.options.fields[fieldName], hostOrigin: getHostOrigin() };
   }
 
   srcForIframe(fieldName) {

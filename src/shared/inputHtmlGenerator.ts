@@ -8,7 +8,7 @@ interface Options {
   fieldLabel: string;
   type: string;
   placeholder: string;
-  options: Option[];
+  options?: Option[];
   styles: {
     field: object;
     label: object;

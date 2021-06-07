@@ -5,7 +5,7 @@ module.exports = {
   mode: 'development',
   entry: {
     client: ['./src/client/index.js'],
-    field: ['./src/field_iframe/field.js'],
+    field: ['./src/field_iframe/field.ts'],
     main: ['./src/main_iframe/main.ts'],
   },
   output: {
