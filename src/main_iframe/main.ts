@@ -71,7 +71,7 @@ class Main extends IframesMessages {
     if (this.allFieldsAreValid(validationResults)) {
       console.log('here we will send data to the backend'); // eslint-disable-line no-console
       console.log(this.fieldsValues); // eslint-disable-line no-console
-      this.sendMessageToClient({ action: 'RECEIVED_TOKEN', message: 'here will be the token' });
+      this.sendMessageToClient({ action: 'RECEIVED_TOKEN', data: { token: 'here will be the token' } });
     } else {
       this.sendInvalidFieldsToClient(validationResults);
       console.log('not all fields were filled in'); // eslint-disable-line no-console
@@ -108,7 +108,7 @@ class Main extends IframesMessages {
     ));
 
     if (invalidFields.length > 0) {
-      this.sendMessageToClient({ action: 'IVALID_FIELDS', invalidFields });
+      this.sendMessageToClient({ action: 'IVALID_FIELDS', data: invalidFields });
     }
   }
 

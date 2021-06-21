@@ -9,11 +9,7 @@ interface IframeOptions {
   fieldName: string;
   styles: object;
   onLoadCallback: OnLoadCallback;
-  elementToAppendIframeTo: HTMLIFrameElement;
-}
-
-interface Fields {
-  [key:string]: Field;
+  elementToAppendIframeTo: HTMLElement|null;
 }
 
 interface Field {
@@ -27,14 +23,18 @@ interface Field {
 interface Options {
   type: string;
   liveValidation?: boolean;
-  fields: Fields;
+  fields: {
+    [key:string]: Field;
+  }
 }
 
 export const setStylesOnElement = (element:HTMLElement, styles:object) => {
   Object.assign(element.style, styles);
 };
 
-export const createIframe = (options:IframeOptions): Promise<string> => new Promise((resolve) => {
+export const createIframe = (options:IframeOptions): Promise<string> => new Promise((resolve, reject) => {
+  if (!options.elementToAppendIframeTo) return reject('Element to append iframe to does not exists');
+
   const iframe = document.createElement('iframe');
 
   iframe.src = options.src;

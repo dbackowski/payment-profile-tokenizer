@@ -38,7 +38,7 @@ export default class IframesMessages {
 
   private referenceForHandleReceivedMessage:ReferenceForHandleReceivedMessage;
 
-  private allowedIframeOrigins = [
+  protected allowedIframeOrigins = [
     'http://localhost:4000',
   ];
 
@@ -47,11 +47,11 @@ export default class IframesMessages {
     this.startListeningOnMessages();
   }
 
-  private startListeningOnMessages() {
+  protected startListeningOnMessages() {
     window.addEventListener('message', this.referenceForHandleReceivedMessage);
   }
 
-  private stopListeningOnMessages() {
+  protected stopListeningOnMessages() {
     window.removeEventListener('message', this.referenceForHandleReceivedMessage);
   }
 
