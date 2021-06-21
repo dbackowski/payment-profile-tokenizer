@@ -108,7 +108,7 @@ class Main extends IframesMessages {
     ));
 
     if (invalidFields.length > 0) {
-      this.sendMessageToClient({ action: 'IVALID_FIELDS', data: invalidFields });
+      this.sendMessageToClient({ action: 'IVALID_FIELDS', data: { invalidFields } });
     }
   }
 

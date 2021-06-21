@@ -114,15 +114,6 @@ export default class Client extends IframesMessages {
     }
   }
 
-  remove() {
-    this.stopListeningOnMessages();
-
-    Object.entries(this.iframes).forEach(([fieldName, iframe]) => {
-      iframe.remove();
-      delete this.iframes[fieldName];
-    });
-  }
-
   tokenize() {
     this.sendMessageToMainIframe({ action: 'TOKENIZE' });
 
@@ -132,7 +123,16 @@ export default class Client extends IframesMessages {
     });
   }
 
-  createFields() {
+  private remove() {
+    this.stopListeningOnMessages();
+
+    Object.entries(this.iframes).forEach(([fieldName, iframe]) => {
+      iframe.remove();
+      delete this.iframes[fieldName];
+    });
+  }
+
+  private createFields() {
     const promises:Promise<string>[] = [];
 
     Object.keys(this.options.fields).forEach((fieldName) => {
@@ -142,12 +142,12 @@ export default class Client extends IframesMessages {
     return Promise.all(promises);
   }
 
-  async createMainIframe() {
+  private async createMainIframe() {
     await createIframe(this.optionsForIframe(Client.mainIframeName));
   }
 
-  static stylesForIframe(fieldName:string) {
-    if (Client.fieldNameIsMainIframe(fieldName)) {
+  private stylesForIframe(fieldName:string): object {
+    if (this.fieldNameIsMainIframe(fieldName)) {
       return {
         display: 'none',
       };
@@ -162,7 +162,7 @@ export default class Client extends IframesMessages {
     };
   }
 
-  optionsForIframe(fieldName:string): OptionsForIframe {
+  private optionsForIframe(fieldName:string): OptionsForIframe {
     return {
       fieldName,
       elementToAppendIframeTo: this.elementToAppendIframeTo(fieldName),
@@ -171,40 +171,40 @@ export default class Client extends IframesMessages {
         this.iframes[fieldName] = iframe;
         this.sendMessageToIframe(fieldName, { action: 'SET_OPTIONS', data: this.dataForIframe(fieldName) });
       },
-      styles: Client.stylesForIframe(fieldName),
+      styles: this.stylesForIframe(fieldName),
     };
   }
 
-  static fieldNameIsMainIframe(fieldName:string) {
+  private fieldNameIsMainIframe(fieldName:string):boolean {
     return fieldName === Client.mainIframeName;
   }
 
-  dataForIframe(fieldName:string) {
-    return Client.fieldNameIsMainIframe(fieldName)
+  private dataForIframe(fieldName:string) {
+    return this.fieldNameIsMainIframe(fieldName)
       ? { fields: this.options.fields, hostOrigin: getHostOrigin() }
       : { fieldName, fieldOptions: this.options.fields[fieldName], hostOrigin: getHostOrigin() };
   }
 
-  srcForIframe(fieldName:string) {
-    return Client.fieldNameIsMainIframe(fieldName)
+  private srcForIframe(fieldName:string) {
+    return this.fieldNameIsMainIframe(fieldName)
       ? `${this.originForIframes}/dist/main.html`
       : `${this.originForIframes}/dist/field.html`;
   }
 
-  elementToAppendIframeTo(fieldName:string): HTMLElement|null {
-    return Client.fieldNameIsMainIframe(fieldName)
+  private elementToAppendIframeTo(fieldName:string): HTMLElement|null {
+    return this.fieldNameIsMainIframe(fieldName)
       ? document.body
       : document.querySelector(this.options.fields[fieldName].selector);
   }
 
-  sendMessageToIframe(name:string, message:SendMessageToIframe) {
+  private sendMessageToIframe(name:string, message:SendMessageToIframe) {
     const iframe = this.iframes[name].contentWindow;
     if (!iframe) return;
 
     iframe.postMessage(message, this.originForIframes);
   }
 
-  sendMessageToIframes(message:SendMessageToIframe) {
+  private sendMessageToIframes(message:SendMessageToIframe) {
     Object.keys(this.iframes)
       .filter((fieldName) => fieldName !== Client.mainIframeName)
       .forEach((fieldName) => {
@@ -212,14 +212,14 @@ export default class Client extends IframesMessages {
       });
   }
 
-  sendMessageToMainIframe(message:SendMessageToIframe) {
+  private sendMessageToMainIframe(message:SendMessageToIframe) {
     const iframe = this.iframes[Client.mainIframeName].contentWindow;
     if (!iframe) return;
 
     iframe.postMessage(message, this.originForIframes);
   }
 
-  setIframeSize(message:SetIframeSize) {
+  private setIframeSize(message:SetIframeSize) {
     const iframe = this.iframes[message.data.fieldName];
 
     const styles = {
@@ -230,15 +230,15 @@ export default class Client extends IframesMessages {
     setStylesOnElement(iframe, styles);
   }
 
-  invalidFields(message:InvalidFields) {
-    this.tokenizeOnError({ error: 'Some fields are not valid', invalidField: message.data.invalidFields });
+  private invalidFields(message:InvalidFields) {
+    this.tokenizeOnError({ error: 'Some fields are not valid', invalidFields: message.data.invalidFields });
   }
 
-  receivedToken(message:ReceivedToken) {
+  private receivedToken(message:ReceivedToken) {
     this.tokenizeOnSuccess(message.data.token);
   }
 
-  getOriginForIframes():string {
+  private getOriginForIframes():string {
     const scriptElemForClient = Array.from(document.querySelectorAll('script')).find((script) => {
       if (!script.src) return null;
 

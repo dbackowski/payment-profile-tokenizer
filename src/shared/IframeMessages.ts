@@ -58,7 +58,7 @@ export default class IframesMessages {
   private handleReceivedMessage(message:MessageEvent) {
     const { method, skipOriginCheck } = this.methodForReceivedMessage(message.data);
 
-    if (method == null) return;
+    if (!method) return;
     if (!this.validOriginMessage(message, <boolean>skipOriginCheck)) return;
 
     method.call(this, message.data);
