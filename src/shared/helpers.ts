@@ -1,4 +1,4 @@
-import fieldsForType from './fieldsForType';
+import { fieldsForType } from './fieldsForType';
 
 interface OnLoadCallback {
   (iframe: HTMLIFrameElement): void;
@@ -83,7 +83,7 @@ export const lunCheck = (creditCardNumber:string): boolean => {
 export const getHostOrigin = (): string => window.location.origin;
 
 export const mergeOptionsWithOptionsForType = (options:Options) => {
-  const fields = fieldsForType.fields(options.type);
+  const fields = fieldsForType(options.type);
 
   Object.keys(options.fields).forEach((key) => {
     options.fields[key].liveValidation = !!options.liveValidation;

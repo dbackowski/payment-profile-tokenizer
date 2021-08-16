@@ -11,41 +11,40 @@ interface Fields {
   }
 }
 
-export default class fieldsForType {
-  static FIELDS_FOR_TYPES:Fields = {
-    creditCard: {
-      fields: {
-        firstName: {
-          validator: 'notEmpty',
-        },
-        lastName: {
-          validator: 'notEmpty',
-        },
-        creditCardNumber: {
-          inputFormat: 'creditCardNumber',
-          validator: 'creditCardNumber',
-        },
-        expirationMonth: {
-          inputFormat: 'month',
-          validator: 'expirationMonth',
-        },
-        expirationYear: {
-          inputFormat: 'year',
-          validator: 'expirationYear',
-        },
-        cvv: {
-          inputFormat: 'cvc',
-          validator: 'notEmpty',
-        },
+const FIELDS_FOR_TYPES:Fields = {
+  creditCard: {
+    fields: {
+      firstName: {
+        validator: 'notEmpty',
+      },
+      lastName: {
+        validator: 'notEmpty',
+      },
+      creditCardNumber: {
+        inputFormat: 'creditCardNumber',
+        validator: 'creditCardNumber',
+      },
+      expirationMonth: {
+        inputFormat: 'month',
+        validator: 'expirationMonth',
+      },
+      expirationYear: {
+        inputFormat: 'year',
+        validator: 'expirationYear',
+      },
+      cvv: {
+        inputFormat: 'cvc',
+        validator: 'notEmpty',
       },
     },
-  }
+  },
+}
 
-  static fields(type:string): Field {
-    return fieldsForType.FIELDS_FOR_TYPES[type].fields;
-  }
+const fieldsForType = (type:string):Field => FIELDS_FOR_TYPES[type].fields;
 
-  static supportedTypes(): string[] {
-    return Object.keys(fieldsForType.FIELDS_FOR_TYPES);
-  }
+const supportedTypes = ():string[] => Object.keys(FIELDS_FOR_TYPES);
+
+export {
+  fieldsForType,
+  supportedTypes
 }
