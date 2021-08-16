@@ -1,5 +1,7 @@
-import IframesMessages from '../shared/IframeMessages';
+import IframesCommunication from '../shared/IframesCommunication';
 import {
+  mainIframeName,
+  allowedIframeOrigins,
   setStylesOnElement,
   createIframe,
   getHostOrigin,
@@ -67,37 +69,67 @@ interface ReceivedToken {
   }
 }
 
-export default class Client extends IframesMessages {
-  static mainIframeName = 'mainIframe';
+const Client = () => {
+  let options:Options = { type: '', fields: {} };
 
-  private options:Options = { type: '', fields: {} };
+  const iframes:Iframes = {};
 
-  private iframes:Iframes = {};
+  let tokenizeOnSuccess:Function = () => {};
 
-  private tokenizeOnSuccess:Function = () => {};
+  let tokenizeOnError:Function = () => {};
 
-  private tokenizeOnError:Function = () => {};
+  const setIframeSize = (message:SetIframeSize) => {
+    const iframe = iframes[message.data.fieldName];
 
-  protected receivedMessageToMethod = {
-    INPUT_SIZE: { method: this.setIframeSize },
-    IVALID_FIELDS: { method: this.invalidFields },
-    RECEIVED_TOKEN: { method: this.receivedToken },
+    const styles = {
+      width: message.data.width,
+      height: message.data.height,
+    };
+
+    setStylesOnElement(iframe, styles);
+  }
+
+  const invalidFields = (message:InvalidFields) => {
+    tokenizeOnError({ error: 'Some fields are not valid', invalidFields: message.data.invalidFields });
+  }
+
+  const receivedToken = (message:ReceivedToken) => {
+    tokenizeOnSuccess(message.data.token);
+  }
+
+  const receivedMessageToMethod = {
+    INPUT_SIZE: { method: setIframeSize },
+    IVALID_FIELDS: { method: invalidFields },
+    RECEIVED_TOKEN: { method: receivedToken },
   };
 
-  private originForIframes:string = '';
+  const iframesCommunication = IframesCommunication(receivedMessageToMethod);
 
-  async create(options:Options) {
-    if (Object.keys(this.iframes).length > 0) {
-      this.remove();
-      this.startListeningOnMessages();
+  let originForIframes:string|null;
+
+  const remove = () => {
+    iframesCommunication.stopListeningOnMessages();
+
+    Object.entries(iframes).forEach(([fieldName, iframe]) => {
+      iframe.remove();
+      delete iframes[fieldName];
+    });
+  }
+
+  const create = async (opt:Options) => {
+    iframesCommunication.startListeningOnMessages();
+
+    if (Object.keys(iframes).length > 0) {
+      remove();
+      iframesCommunication.startListeningOnMessages();
     }
 
-    this.options = options;
-    this.originForIframes = this.getOriginForIframes();
+    options = opt;
+    originForIframes = getOriginForIframes();
 
-    if (!this.originForIframes) return;
+    if (!originForIframes) return;
 
-    await this.createMainIframe();
+    await createMainIframe();
 
     const {
       valid: optionsValid,
@@ -106,48 +138,65 @@ export default class Client extends IframesMessages {
 
     if (optionsValid) {
       mergeOptionsWithOptionsForType(options);
-      this.sendMessageToMainIframe({ action: 'SET_OPTIONS', data: this.dataForIframe(Client.mainIframeName) });
-
-      await this.createFields();
+      sendMessageToMainIframe({ action: 'SET_OPTIONS', data: dataForIframe(mainIframeName) });
+      await createFields();
     } else {
       console.error(optionsInvalidErrorMessage); // eslint-disable-line no-console
     }
-  }
+  };
 
-  tokenize() {
-    this.sendMessageToMainIframe({ action: 'TOKENIZE' });
+  const tokenize = () => {
+    sendMessageToMainIframe({ action: 'TOKENIZE' });
 
     return new Promise((resolve, reject) => {
-      this.tokenizeOnSuccess = resolve;
-      this.tokenizeOnError = reject;
+      tokenizeOnSuccess = resolve;
+      tokenizeOnError = reject;
     });
   }
 
-  private remove() {
-    this.stopListeningOnMessages();
+  const getOriginForIframes = ():string => {
+    const scriptElemForClient = Array.from(document.querySelectorAll('script')).find((script) => {
+      if (!script.src) return null;
 
-    Object.entries(this.iframes).forEach(([fieldName, iframe]) => {
-      iframe.remove();
-      delete this.iframes[fieldName];
-    });
-  }
-
-  private createFields() {
-    const promises:Promise<string>[] = [];
-
-    Object.keys(this.options.fields).forEach((fieldName) => {
-      promises.push(createIframe(this.optionsForIframe(fieldName)));
+      return allowedIframeOrigins.find((origin) => script.src.startsWith(origin));
     });
 
-    return Promise.all(promises);
+    if (!scriptElemForClient) return '';
+
+    return new URL(scriptElemForClient.src).origin;
   }
 
-  private async createMainIframe() {
-    await createIframe(this.optionsForIframe(Client.mainIframeName));
+  const fieldNameIsMainIframe = (fieldName:string):boolean => {
+    return fieldName === mainIframeName;
   }
 
-  private stylesForIframe(fieldName:string): object {
-    if (this.fieldNameIsMainIframe(fieldName)) {
+  const elementToAppendIframeTo = (fieldName:string): HTMLElement|null => {
+    return fieldNameIsMainIframe(fieldName)
+      ? document.body
+      : document.querySelector(options.fields[fieldName].selector);
+  };
+
+  const srcForIframe = (fieldName:string) => {
+    return fieldNameIsMainIframe(fieldName)
+      ? `${originForIframes}/dist/main.html`
+      : `${originForIframes}/dist/field.html`;
+  };
+
+  const sendMessageToIframe = (name:string, message:SendMessageToIframe) => {
+    const iframe = iframes[name].contentWindow;
+    if (!iframe || !originForIframes) return;
+
+    iframe.postMessage(message, originForIframes);
+  };
+
+  const dataForIframe = (fieldName:string) => {
+    return fieldNameIsMainIframe(fieldName)
+      ? { fields: options.fields, hostOrigin: getHostOrigin() }
+      : { fieldName, fieldOptions: options.fields[fieldName], hostOrigin: getHostOrigin() };
+  };
+
+  const stylesForIframe = (fieldName:string): object => {
+    if (fieldNameIsMainIframe(fieldName)) {
       return {
         display: 'none',
       };
@@ -162,93 +211,44 @@ export default class Client extends IframesMessages {
     };
   }
 
-  private optionsForIframe(fieldName:string): OptionsForIframe {
+  const optionsForIframe = (fieldName:string): OptionsForIframe => {
     return {
       fieldName,
-      elementToAppendIframeTo: this.elementToAppendIframeTo(fieldName),
-      src: this.srcForIframe(fieldName),
+      elementToAppendIframeTo: elementToAppendIframeTo(fieldName),
+      src: srcForIframe(fieldName),
       onLoadCallback: (iframe:HTMLIFrameElement) => {
-        this.iframes[fieldName] = iframe;
-        this.sendMessageToIframe(fieldName, { action: 'SET_OPTIONS', data: this.dataForIframe(fieldName) });
+        iframes[fieldName] = iframe;
+        sendMessageToIframe(fieldName, { action: 'SET_OPTIONS', data: dataForIframe(fieldName) });
       },
-      styles: this.stylesForIframe(fieldName),
+      styles: stylesForIframe(fieldName),
     };
   }
 
-  private fieldNameIsMainIframe(fieldName:string):boolean {
-    return fieldName === Client.mainIframeName;
+  const createMainIframe = async () => {
+    await createIframe(optionsForIframe(mainIframeName));
   }
 
-  private dataForIframe(fieldName:string) {
-    return this.fieldNameIsMainIframe(fieldName)
-      ? { fields: this.options.fields, hostOrigin: getHostOrigin() }
-      : { fieldName, fieldOptions: this.options.fields[fieldName], hostOrigin: getHostOrigin() };
-  }
+  const createFields = () => {
+    const promises:Promise<string>[] = [];
 
-  private srcForIframe(fieldName:string) {
-    return this.fieldNameIsMainIframe(fieldName)
-      ? `${this.originForIframes}/dist/main.html`
-      : `${this.originForIframes}/dist/field.html`;
-  }
-
-  private elementToAppendIframeTo(fieldName:string): HTMLElement|null {
-    return this.fieldNameIsMainIframe(fieldName)
-      ? document.body
-      : document.querySelector(this.options.fields[fieldName].selector);
-  }
-
-  private sendMessageToIframe(name:string, message:SendMessageToIframe) {
-    const iframe = this.iframes[name].contentWindow;
-    if (!iframe) return;
-
-    iframe.postMessage(message, this.originForIframes);
-  }
-
-  private sendMessageToIframes(message:SendMessageToIframe) {
-    Object.keys(this.iframes)
-      .filter((fieldName) => fieldName !== Client.mainIframeName)
-      .forEach((fieldName) => {
-        this.sendMessageToIframe(fieldName, message);
-      });
-  }
-
-  private sendMessageToMainIframe(message:SendMessageToIframe) {
-    const iframe = this.iframes[Client.mainIframeName].contentWindow;
-    if (!iframe) return;
-
-    iframe.postMessage(message, this.originForIframes);
-  }
-
-  private setIframeSize(message:SetIframeSize) {
-    const iframe = this.iframes[message.data.fieldName];
-
-    const styles = {
-      width: message.data.width,
-      height: message.data.height,
-    };
-
-    setStylesOnElement(iframe, styles);
-  }
-
-  private invalidFields(message:InvalidFields) {
-    this.tokenizeOnError({ error: 'Some fields are not valid', invalidFields: message.data.invalidFields });
-  }
-
-  private receivedToken(message:ReceivedToken) {
-    this.tokenizeOnSuccess(message.data.token);
-  }
-
-  private getOriginForIframes():string {
-    const scriptElemForClient = Array.from(document.querySelectorAll('script')).find((script) => {
-      if (!script.src) return null;
-
-      return this.allowedIframeOrigins.find((origin) => script.src.startsWith(origin));
+    Object.keys(options.fields).forEach((fieldName) => {
+      promises.push(createIframe(optionsForIframe(fieldName)));
     });
 
-    if (!scriptElemForClient) return '';
-
-    return new URL(scriptElemForClient.src).origin;
+    return Promise.all(promises);
   }
-}
+
+  const sendMessageToMainIframe = (message:SendMessageToIframe) => {
+    const iframe = iframes[mainIframeName].contentWindow;
+    if (!iframe || !originForIframes) return;
+
+    iframe.postMessage(message, originForIframes);
+  }
+
+  return {
+    create,
+    tokenize,
+  };
+};
 
 (window as any).Client = Client;

@@ -28,6 +28,12 @@ interface Options {
   }
 }
 
+export const mainIframeName = 'mainIframe';
+
+export const allowedIframeOrigins = [
+  'http://localhost:4000',
+];
+
 export const setStylesOnElement = (element:HTMLElement, styles:object) => {
   Object.assign(element.style, styles);
 };
