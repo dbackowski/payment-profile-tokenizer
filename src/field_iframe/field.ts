@@ -10,6 +10,7 @@ enum StyleKeys {
   fieldInvalid = 'fieldInvalid',
 }
 
+type elementForStyle = 'label'|'labelInvalid'|'field'|'fieldInvalid';
 interface FieldOption {
   style: {
     [key in StyleKeys]: object;
@@ -114,8 +115,7 @@ const Field = () => {
 
   const fieldName = () => options.fieldName;
 
-  // TODO: refactor
-  const getStyleFor = (element: 'label'|'labelInvalid'|'field'|'fieldInvalid') => {
+  const getStyleFor = (element: elementForStyle) => {
     return options.fieldOptions?.style[element] || {};
   }
 
