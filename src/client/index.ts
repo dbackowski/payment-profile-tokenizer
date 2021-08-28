@@ -7,7 +7,7 @@ import {
   getHostOrigin,
   mergeOptionsWithOptionsForType,
 } from '../shared/helpers';
-import optionsValidator from '../shared/optionsValidator';
+import { optionsValidator } from '../shared/optionsValidator';
 
 interface Iframes {
   [key:string]: HTMLIFrameElement;
@@ -134,7 +134,7 @@ const Client = () => {
     const {
       valid: optionsValid,
       errorMessage: optionsInvalidErrorMessage,
-    } = optionsValidator.validate(options);
+    } = optionsValidator(options);
 
     if (optionsValid) {
       mergeOptionsWithOptionsForType(options);
