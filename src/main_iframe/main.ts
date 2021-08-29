@@ -1,5 +1,5 @@
 import IframesCommunication from '../shared/IframesCommunication';
-import InputValidator from '../shared/inputValidator';
+import { inputValidator } from '../shared/inputValidator';
 
 interface FieldValues {
   [key:string]: string;
@@ -95,7 +95,7 @@ const Main = () => {
   }
 
   const validateField = (fieldName:string):ValidationResult => {
-    const validationResult = InputValidator.validate(
+    const validationResult = inputValidator(
       options.fields[fieldName].validator,
       fieldName,
       fieldsValues,

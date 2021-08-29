@@ -17,80 +17,78 @@ interface ValidationResult {
   errorMessage: string;
 }
 
-export default class InputValidator {
-  static AVAILABLE_VALIDATORS: AvailableValidators = {
-    notEmpty: InputValidator.notEmpty,
-    expirationMonth: InputValidator.expirationMonth,
-    expirationYear: InputValidator.expirationYear,
-    creditCardNumber: InputValidator.creditCardNumber,
-  };
+const ERROR_MESSAGES: ErrorMessages = {
+  NOT_EMPTY_ERROR_MESSAGE: 'Field can not be empty',
+  EXPIRATION_MONTH_IN_PAST: 'Month can not be in the past',
+  EXPIRATION_MONTH_NOT_VALID: 'Month is invalid',
+  EXPIRATION_YEAR_IN_PAST: 'Year can not be in the past',
+  CREDIT_CARD_NUMBER_NOT_VALID: 'Credit card number is invalid',
+}
 
-  static ERROR_MESSAGES: ErrorMessages = {
-    NOT_EMPTY_ERROR_MESSAGE: 'Field can not be empty',
-    EXPIRATION_MONTH_IN_PAST: 'Month can not be in the past',
-    EXPIRATION_MONTH_NOT_VALID: 'Month is invalid',
-    EXPIRATION_YEAR_IN_PAST: 'Year can not be in the past',
-    CREDIT_CARD_NUMBER_NOT_VALID: 'Credit card number is invalid',
+const notEmpty = (fieldValue: string): ValidationResult => {
+  const valid = fieldValue != null && fieldValue !== '';
+
+  return { valid, errorMessage: ERROR_MESSAGES.NOT_EMPTY_ERROR_MESSAGE };
+}
+
+const expirationMonth = (fieldValue:string, fieldsValues:FieldValues): ValidationResult => {
+  let { valid, errorMessage } = notEmpty(fieldValue);
+  if (!valid) return { valid, errorMessage };
+
+  const expirationMonth = parseInt(fieldValue, 10);
+
+  if (expirationMonth < 1 || expirationMonth > 12) {
+    return {
+      valid: false,
+      errorMessage: ERROR_MESSAGES.EXPIRATION_MONTH_NOT_VALID,
+    };
   }
 
-  static validate(validator:string, fieldName:string, fieldsValues:FieldValues): ValidationResult {
-    const validatorMethod = InputValidator.AVAILABLE_VALIDATORS[validator];
+  const expirationYear = parseInt(fieldsValues.expirationYear, 10);
+  const expirationDate = new Date();
 
-    return validatorMethod.call(this, fieldsValues[fieldName], fieldsValues);
-  }
+  expirationDate.setFullYear(expirationYear, expirationMonth, 0);
 
-  static notEmpty(fieldValue: string): ValidationResult {
-    const valid = fieldValue != null && fieldValue !== '';
+  valid = Number.isNaN(expirationYear)
+          || expirationDate.getFullYear() < new Date().getFullYear()
+          || expirationDate > new Date();
 
-    return { valid, errorMessage: InputValidator.ERROR_MESSAGES.NOT_EMPTY_ERROR_MESSAGE };
-  }
+  errorMessage = ERROR_MESSAGES.EXPIRATION_MONTH_IN_PAST;
 
-  static expirationMonth(fieldValue:string, fieldsValues:FieldValues): ValidationResult {
-    let { valid, errorMessage } = InputValidator.notEmpty(fieldValue);
-    if (!valid) return { valid, errorMessage };
+  return { valid, errorMessage };
+}
 
-    const expirationMonth = parseInt(fieldValue, 10);
+const expirationYear = (fieldValue:string): ValidationResult => {
+  let { valid, errorMessage } = notEmpty(fieldValue);
+  if (!valid) return { valid, errorMessage };
 
-    if (expirationMonth < 1 || expirationMonth > 12) {
-      return {
-        valid: false,
-        errorMessage: InputValidator.ERROR_MESSAGES.EXPIRATION_MONTH_NOT_VALID,
-      };
-    }
+  const expirationYear = parseInt(fieldValue, 10);
 
-    const expirationYear = parseInt(fieldsValues.expirationYear, 10);
-    const expirationDate = new Date();
+  valid = expirationYear >= new Date().getFullYear();
+  errorMessage = ERROR_MESSAGES.EXPIRATION_YEAR_IN_PAST;
 
-    expirationDate.setFullYear(expirationYear, expirationMonth, 0);
+  return { valid, errorMessage };
+}
 
-    valid = Number.isNaN(expirationYear)
-            || expirationDate.getFullYear() < new Date().getFullYear()
-            || expirationDate > new Date();
+const creditCardNumber = (fieldValue:string): ValidationResult => {
+  let { valid, errorMessage } = notEmpty(fieldValue);
+  if (!valid) return { valid, errorMessage };
 
-    errorMessage = InputValidator.ERROR_MESSAGES.EXPIRATION_MONTH_IN_PAST;
+  valid = lunCheck(fieldValue.replace(/\D/g, ''));
+  errorMessage = ERROR_MESSAGES.CREDIT_CARD_NUMBER_NOT_VALID;
 
-    return { valid, errorMessage };
-  }
+  return { valid, errorMessage };
+}
 
-  static expirationYear(fieldValue:string): ValidationResult {
-    let { valid, errorMessage } = InputValidator.notEmpty(fieldValue);
-    if (!valid) return { valid, errorMessage };
+const AVAILABLE_VALIDATORS: AvailableValidators = {
+  notEmpty: notEmpty,
+  expirationMonth: expirationMonth,
+  expirationYear: expirationYear,
+  creditCardNumber: creditCardNumber,
+};
 
-    const expirationYear = parseInt(fieldValue, 10);
+export const inputValidator = (validator:string, fieldName:string, fieldsValues:FieldValues): ValidationResult => {
+  const validatorMethod = AVAILABLE_VALIDATORS[validator];
 
-    valid = expirationYear >= new Date().getFullYear();
-    errorMessage = InputValidator.ERROR_MESSAGES.EXPIRATION_YEAR_IN_PAST;
-
-    return { valid, errorMessage };
-  }
-
-  static creditCardNumber(fieldValue:string): ValidationResult {
-    let { valid, errorMessage } = InputValidator.notEmpty(fieldValue);
-    if (!valid) return { valid, errorMessage };
-
-    valid = lunCheck(fieldValue.replace(/\D/g, ''));
-    errorMessage = InputValidator.ERROR_MESSAGES.CREDIT_CARD_NUMBER_NOT_VALID;
-
-    return { valid, errorMessage };
-  }
+  return validatorMethod.call(this, fieldsValues[fieldName], fieldsValues);
 }
