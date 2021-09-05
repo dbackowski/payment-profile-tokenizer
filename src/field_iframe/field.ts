@@ -137,7 +137,7 @@ const Field = () => {
   }
 
   const createField = () => {
-    const html = new InputHtmlGenerator(options.fieldName || '', optionsForHtmlGenerator());
+    const html = InputHtmlGenerator(options.fieldName || '', optionsForHtmlGenerator());
     const elem = html.output();
 
     if (getInputFormat()) {
@@ -167,12 +167,14 @@ const Field = () => {
   }
 
   const sendMessageToClient = (message: any) => {
-    if (!options.hostOrigin) return;
+    if (!options.hostOrigin || !window.top) return;
 
     window.top.postMessage(message, options.hostOrigin);
   }
 
   const sendMessageToMainIframe = (message: any) => {
+    if (!window.top) return;
+
     const mainIframe = window.top.frames[mainIframeName as any];
     if (mainIframe.origin !== options.hostOrigin) return;
 

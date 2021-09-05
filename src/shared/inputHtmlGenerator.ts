@@ -19,32 +19,63 @@ interface InputTypes {
   [key: string]: Function;
 }
 
-export default class InputHtmlGenerator {
-  private fieldName;
+const InputHtmlGenerator = (fieldName:string, options:Options) => {
+  const inputTypeText = ():HTMLInputElement => {
+    const input = document.createElement('input');
 
-  private options:Options;
+    input.id = fieldName;
+    input.name = fieldName;
+    input.className = 'input';
+    input.placeholder = options.placeholder;
+    setStylesOnElement(input, options.styles.field);
 
-  private inputTypes:InputTypes = {
-    text: this.inputTypeText,
-    select: this.inputTypeSelect,
+    return input;
   }
 
-  constructor(fieldName:string, options:Options) {
-    this.fieldName = fieldName;
-    this.options = options;
+  const inputTypeSelect = ():HTMLSelectElement => {
+    const input = document.createElement('select');
+
+    const placeholderOption = document.createElement('option');
+    placeholderOption.value = '';
+    placeholderOption.text = options.placeholder;
+    placeholderOption.setAttribute('disabled', '');
+    placeholderOption.setAttribute('selected', '');
+
+    input.add(placeholderOption);
+
+    options.options!.forEach((option) => {
+      const optionElem = document.createElement('option');
+
+      optionElem.value = option.value;
+      optionElem.text = option.text;
+
+      input.add(optionElem);
+    });
+
+    input.id = fieldName;
+    input.name = fieldName;
+    input.className = 'select';
+    setStylesOnElement(input, options.styles.field);
+
+    return input;
   }
 
-  output(): HTMLDivElement {
+  const inputTypes:InputTypes = {
+    text: inputTypeText,
+    select: inputTypeSelect,
+  }
+
+  const output = ():HTMLDivElement => {
     const div = document.createElement('div');
-    const input = this.inputForType();
+    const input = inputForType();
     const errorMsgDiv = document.createElement('div');
     errorMsgDiv.className = 'error-msg';
 
-    if (this.options.fieldLabel) {
+    if (options.fieldLabel) {
       const label = document.createElement('label');
       label.setAttribute('for', input.name);
-      label.innerText = this.options.fieldLabel;
-      setStylesOnElement(label, this.options.styles.label);
+      label.innerText = options.fieldLabel;
+      setStylesOnElement(label, options.styles.label);
       div.appendChild(label);
     }
 
@@ -54,47 +85,11 @@ export default class InputHtmlGenerator {
     return div;
   }
 
-  private inputForType(): HTMLInputElement | HTMLSelectElement {
-    return this.inputTypes[this.options.type].call(this);
-  }
+  const inputForType = ():HTMLInputElement | HTMLSelectElement => inputTypes[options.type].call(this);
 
-  private inputTypeText(): HTMLInputElement {
-    const input = document.createElement('input');
-
-    input.id = this.fieldName;
-    input.name = this.fieldName;
-    input.className = 'input';
-    input.placeholder = this.options.placeholder;
-    setStylesOnElement(input, this.options.styles.field);
-
-    return input;
-  }
-
-  private inputTypeSelect(): HTMLSelectElement {
-    const input = document.createElement('select');
-
-    const placeholderOption = document.createElement('option');
-    placeholderOption.value = '';
-    placeholderOption.text = this.options.placeholder;
-    placeholderOption.setAttribute('disabled', '');
-    placeholderOption.setAttribute('selected', '');
-
-    input.add(placeholderOption);
-
-    this.options.options!.forEach((option) => {
-      const optionElem = document.createElement('option');
-
-      optionElem.value = option.value;
-      optionElem.text = option.text;
-
-      input.add(optionElem);
-    });
-
-    input.id = this.fieldName;
-    input.name = this.fieldName;
-    input.className = 'select';
-    setStylesOnElement(input, this.options.styles.field);
-
-    return input;
-  }
+  return {
+    output,
+  };
 }
+
+export default InputHtmlGenerator;
