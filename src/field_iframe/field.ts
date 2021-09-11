@@ -183,7 +183,7 @@ const Field = () => {
 
   const formatInput = (event:Event) => {
     const inputElem = <HTMLInputElement>document.querySelector(`#${fieldName()}`);
-    const { value, carretPosition } = InputFormatter.format(getInputFormat(), <HTMLInputElement>event.target);
+    const { value, carretPosition } = InputFormatter(getInputFormat(), <HTMLInputElement>event.target);
     inputElem.value = value;
     if (carretPosition) (event.target as HTMLInputElement).setSelectionRange(carretPosition, carretPosition);
   }
