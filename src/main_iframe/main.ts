@@ -133,6 +133,8 @@ const Main = () => {
   }
 
   const sendMessageToIframe = (fieldName:string, message:object) => {
+    if (!window.top) return;
+
     const iframe = (window.top.frames as any)[fieldName];
     if (iframe.origin !== options.hostOrigin) return;
 
@@ -140,6 +142,8 @@ const Main = () => {
   }
 
   const sendMessageToClient = (message:object) => {
+    if (!window.top) return;
+
     window.top.postMessage(message, options.hostOrigin);
   }
 
