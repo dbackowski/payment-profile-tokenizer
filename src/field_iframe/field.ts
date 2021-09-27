@@ -116,7 +116,7 @@ const Field = () => {
   const fieldName = () => options.fieldName;
 
   const getStyleFor = (element: elementForStyle) => {
-    return options.fieldOptions?.style[element] || {};
+    return options.fieldOptions?.style?.[element] || {};
   }
 
   const getFieldLabel = ():string => options.fieldOptions?.label || '';
