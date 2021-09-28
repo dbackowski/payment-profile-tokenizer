@@ -1,0 +1,68 @@
+<html>
+  <head>
+    <title>Payment Profile Tokenizer Credit Card Test Example</title>
+    <script src="http://localhost:4000/dist/client.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="example">
+        <div id="first-name"></div>
+        <div id="last-name"></div>
+        <div id="credit-card-inline">
+          <div id="credit-card-number"></div>
+          <div id="expiration-month"></div>
+          <div id="slash">/</div>
+          <div id="expiration-year"></div>
+          <div id="cvc"></div>
+        </div>
+        <button id="submit">Submit</button>
+      </div>
+    </div>
+
+    <script>
+      var options = {
+        type: 'creditCard',
+        liveValidation: true,
+        fields: {
+          firstName: {
+            selector: '#first-name',
+            label: 'First Name',
+            placeholder: 'John',
+          },
+          lastName: {
+            selector: '#last-name',
+            label: 'Last Name',
+            placeholder: 'Doe',
+          },
+          creditCardNumber: {
+            selector: '#credit-card-number',
+            placeholder: 'Card Number',
+          },
+          expirationMonth: {
+            selector: '#expiration-month',
+            placeholder: 'MM',
+          },
+          expirationYear: {
+            selector: '#expiration-year',
+            placeholder: 'YY',
+          },
+          cvv: {
+            selector: '#cvc',
+            placeholder: 'CVC',
+          },
+        }
+      };
+      var lib = new Client();
+      lib.create(options);
+
+      document.querySelector('#submit').addEventListener('click', function() {
+        lib.tokenize().then((token) => {
+          console.log(token);
+        }).catch((error) => {
+          console.error(error);
+        });
+      });
+    </script>
+  </body>
+</html>
+
