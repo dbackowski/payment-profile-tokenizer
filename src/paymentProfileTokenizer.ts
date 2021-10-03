@@ -1,4 +1,4 @@
-import IframesCommunication from '../shared/IframesCommunication';
+import IframesCommunication from './shared/IframesCommunication';
 import {
   mainIframeName,
   allowedIframeOrigins,
@@ -6,8 +6,8 @@ import {
   createIframe,
   getHostOrigin,
   mergeOptionsWithOptionsForType,
-} from '../shared/helpers';
-import { optionsValidator } from '../shared/optionsValidator';
+} from './shared/helpers';
+import { optionsValidator } from './shared/optionsValidator';
 
 interface Iframes {
   [key:string]: HTMLIFrameElement;
@@ -69,7 +69,7 @@ interface ReceivedToken {
   }
 }
 
-const Client = () => {
+const PaymentProfileTokenizer = () => {
   let options:Options = { type: '', fields: {} };
 
   const iframes:Iframes = {};
@@ -251,4 +251,4 @@ const Client = () => {
   };
 };
 
-(window as any).Client = Client;
+(window as any).PaymentProfileTokenizer = PaymentProfileTokenizer;

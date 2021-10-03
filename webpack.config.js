@@ -4,7 +4,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 module.exports = {
   mode: 'development',
   entry: {
-    client: ['./src/client/index.ts'],
+    'payment-profile-tokenizer': ['./src/paymentProfileTokenizer.ts'],
     field: ['./src/field_iframe/field.ts'],
     main: ['./src/main_iframe/main.ts'],
   },
