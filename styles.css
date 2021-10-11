@@ -1,3 +1,7 @@
+body {
+  background-color: #cfd7df;
+}
+
 .container {
   padding: 80px 20px 110px;
   display: flex;
@@ -7,7 +11,7 @@
 
 .example {
   min-width: 400px;
-  background-color: #64ac12;
+  background-color: #fff;
   border-radius: 5px;
   box-shadow: 0 7px 14px rgb(50 50 93 / 10%), 0 3px 6px rgb(0 0 0 / 8%);
   padding: 40px 40px;
@@ -17,15 +21,6 @@
 
 #credit-card-inline {
   display: flex;
-  margin-top: 20px;
-}
-
-#slash {
-  background-color: #bff7c8;
-  display: inline-block;
-  vertical-align: middle;
-  margin: 0px;
-  padding-top: 12px;
 }
 
 #last-live-validation-error {
@@ -40,10 +35,10 @@
   display: block;
   width: 100%;
   height: 40px;
-  margin: 20px 0 0;
-  background-color: #fff;
+  margin: 40px 0 0;
   border-radius: 5px;
-  color: #64ac12;
+  color: #fff;
+  background-color: #24b47e;
   font-weight: 800;
   cursor: pointer;
   border: 0px;

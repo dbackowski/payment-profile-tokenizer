@@ -9,10 +9,9 @@
         <div id="first-name"></div>
         <div id="first-name-error-message"></div>
         <div id="last-name"></div>
+        <div id="credit-card-number"></div>
         <div id="credit-card-inline">
-          <div id="credit-card-number"></div>
           <div id="expiration-month"></div>
-          <div id="slash">/</div>
           <div id="expiration-year"></div>
           <div id="cvc"></div>
         </div>
@@ -24,21 +23,10 @@
     <script>
       var style = function(style = { field: {}, label: {} }) {
         var result = {
-          label: {
-            display: 'inline-block',
-            float: 'left',
-            padding: '11px 20px',
-            textAlign: 'left',
-            width: '120px',
-            backgroundColor: '#bff7c8',
-            margin: '0px',
-            color: '#64ac12',
-          },
           labelInvalid: {
             borderBottom: '1px solid red',
           },
           field: {
-            backgroundColor: '#bff7c8',
             display: 'inline-block',
             verticalAlign: 'middle',
             margin: '0px',
@@ -65,35 +53,33 @@
         fields: {
           firstName: {
             selector: '#first-name',
-            label: 'First Name',
-            placeholder: 'John',
-            style: style({ label: { borderRadius: '5px 0px 0px 0px', borderBottom: '1px solid #64ac12' }, field: { minWidth: '300px', borderRadius: '0px 5px 0px 0px' } }),
+            placeholder: 'First Name',
+            style: style({ field: { minWidth: '500px', borderBottom: '1px solid #cfd7df' } }),
           },
           lastName: {
             selector: '#last-name',
-            label: 'Last Name',
-            placeholder: 'Doe',
-            style: style({ label: { borderRadius: '0px 0px 0px 5px' }, field: { minWidth: '300px', borderRadius: '0px 0px 5px 0px' } }),
+            placeholder: 'Last Name',
+            style: style({field: { minWidth: '500px', borderBottom: '1px solid #cfd7df' } }),
           },
           creditCardNumber: {
             selector: '#credit-card-number',
             placeholder: 'Card Number',
-            style: style({ field: { width: '330px', borderRadius: '5px 0px 0px 5px', paddingLeft: '20px' } }),
+            style: style({ field: { width: '500px', borderBottom: '1px solid #cfd7df' } }),
           },
           expirationMonth: {
             selector: '#expiration-month',
-            placeholder: 'MM',
-            style: style({ field: { width: '30px' } }),
+            placeholder: 'Expiration Month',
+            style: style({ field: { width: '150px', borderBottom: '1px solid #cfd7df' } }),
           },
           expirationYear: {
             selector: '#expiration-year',
-            placeholder: 'YY',
-            style: style({ field: { paddingLeft: '5px', width: '45px' } }),
+            placeholder: 'Expiration Year',
+            style: style({ field: { marginLeft: '25px', width: '150px', borderBottom: '1px solid #cfd7df' } }),
           },
           cvv: {
             selector: '#cvc',
             placeholder: 'CVC',
-            style: style({ field: { width: '50px', borderRadius: '0px 5px 5px 0px', paddingRight: '20px' } }),
+            style: style({ field: { marginLeft: '25px', width: '150px', borderBottom: '1px solid #cfd7df' } }),
           },
         },
         onLiveValidation: function(errors) {
