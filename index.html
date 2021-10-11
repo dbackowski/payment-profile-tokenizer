@@ -7,6 +7,7 @@
     <div class="container">
       <div class="example">
         <div id="first-name"></div>
+        <div id="first-name-error-message"></div>
         <div id="last-name"></div>
         <div id="credit-card-inline">
           <div id="credit-card-number"></div>
@@ -16,6 +17,7 @@
           <div id="cvc"></div>
         </div>
         <button id="submit">Submit</button>
+        <div id="last-live-validation-error"></div>
       </div>
     </div>
 
@@ -93,6 +95,17 @@
             placeholder: 'CVC',
             style: style({ field: { width: '50px', borderRadius: '0px 5px 5px 0px', paddingRight: '20px' } }),
           },
+        },
+        onLiveValidation: function(errors) {
+          var elem = document.querySelector('#last-live-validation-error');
+
+          if (errors.length === 0) {
+            elem.innerHTML = '';
+            return;
+          }
+
+          elem.innerHTML = errors[errors.length - 1].errorMessage;
+          console.log(errors);
         }
       };
       var lib = new PaymentProfileTokenizer();

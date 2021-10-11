@@ -28,6 +28,14 @@
   padding-top: 12px;
 }
 
+#last-live-validation-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  color: red;
+}
+
 .example button {
   display: block;
   width: 100%;

@@ -16,6 +16,7 @@
           <div id="cvc"></div>
         </div>
         <button id="submit">Submit</button>
+        <div id="errors"></div>
       </div>
     </div>
 
@@ -50,6 +51,22 @@
             selector: '#cvc',
             placeholder: 'CVC',
           },
+        },
+        onLiveValidation: function(errors) {
+          var elem = document.querySelector('#errors');
+
+          if (errors.length === 0) {
+            elem.innerHTML = '';
+            return;
+          }
+
+          var errorMessage = '';
+          errors.forEach((invalidField) => {
+            errorMessage += `${invalidField.fieldName} - ${invalidField.errorMessage}<br />`;
+          })
+          elem.innerHTML = errorMessage;
+
+          console.error(errors);
         }
       };
       var lib = new PaymentProfileTokenizer();
@@ -59,6 +76,13 @@
         lib.tokenize().then((token) => {
           console.log(token);
         }).catch((error) => {
+          var elem = document.querySelector('#errors');
+          var errorMessage = '';
+          error.invalidFields.forEach((invalidField) => {
+            errorMessage += `${invalidField.fieldName} - ${invalidField.errorMessage}<br />`;
+          })
+          elem.innerHTML = errorMessage;
+
           console.error(error);
         });
       });

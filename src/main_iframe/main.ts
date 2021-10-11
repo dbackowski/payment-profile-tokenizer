@@ -44,10 +44,16 @@ interface ValidationResult {
   errorMessage: string;
 }
 
+interface liveValidationInvalidFields {
+  fieldName: string;
+  errorMessage: string;
+}
+
 const Main = () => {
   let options:Options = { fields: {}, hostOrigin: '' }
 
   const fieldsValues:FieldValues = {};
+  let liveValidationInvalidFields:liveValidationInvalidFields[] = [];
 
   const setOptions = (message:MessageForOptions) => {
     options = message.data;
@@ -59,12 +65,13 @@ const Main = () => {
 
   const liveValidateField = (message:MessageForLiveValidate) => {
     const validationResults = new Array(validateField(message.data.fieldName));
-    showErrorMessageForInvalidFields(validationResults);
+    markInvalidFields(validationResults);
+    sendLiveInvalidFieldsToClient(validationResults);
   }
 
   const tokenize = () => {
     const validationResults = validateFields();
-    showErrorMessageForInvalidFields(validationResults);
+    markInvalidFields(validationResults);
 
     if (allFieldsAreValid(validationResults)) {
       console.log('here we will send data to the backend'); // eslint-disable-line no-console
@@ -118,18 +125,32 @@ const Main = () => {
     }
   }
 
-  const showErrorMessageForInvalidFields = (validationResults:ValidationResult[]) => {
+  const markInvalidFields = (validationResults:ValidationResult[]) => {
     validationResults.forEach((result) => {
       let message;
 
       if (result.valid) {
-        message = { action: 'HIDE_ERROR_MESSAGE' };
+        message = { action: 'MARK_FIELD_AS_VALID' };
       } else {
-        message = { action: 'SHOW_ERROR_MESSAGE', data: { error: result.errorMessage } };
+        message = { action: 'MARK_FIELD_AS_INVALID', data: { error: result.errorMessage } };
       }
 
       sendMessageToIframe(result.fieldName, message);
     });
+  };
+
+  const sendLiveInvalidFieldsToClient = (validationResults:ValidationResult[]) => {
+    validationResults.forEach((result) => {
+      if (result.valid) {
+        liveValidationInvalidFields = liveValidationInvalidFields.filter(invalidField => {
+          return invalidField.fieldName !== result.fieldName
+        });
+      } else {
+        liveValidationInvalidFields.push({ fieldName: result.fieldName, errorMessage: result.errorMessage });
+      }
+    });
+
+    sendMessageToClient({ action: 'LIVE_VALIDATION_RESULTS', data: liveValidationInvalidFields });
   }
 
   const sendMessageToIframe = (fieldName:string, message:object) => {

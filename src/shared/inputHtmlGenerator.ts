@@ -68,8 +68,6 @@ const InputHtmlGenerator = (fieldName:string, options:Options) => {
   const output = ():HTMLDivElement => {
     const div = document.createElement('div');
     const input = inputForType();
-    const errorMsgDiv = document.createElement('div');
-    errorMsgDiv.className = 'error-msg';
 
     if (options.fieldLabel) {
       const label = document.createElement('label');
@@ -80,7 +78,6 @@ const InputHtmlGenerator = (fieldName:string, options:Options) => {
     }
 
     div.appendChild(input);
-    div.appendChild(errorMsgDiv);
 
     return div;
   }

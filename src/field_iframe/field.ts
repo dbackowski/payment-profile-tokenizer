@@ -45,12 +45,6 @@ interface OptionsForHtmlGenerator {
   };
 }
 
-interface ShowErrorMessage {
-  action: string;
-  data: {
-    error: string;
-  }
-}
 const Field = () => {
   let options:Options = { };
 
@@ -72,26 +66,20 @@ const Field = () => {
     sendMessageToMainIframe(message);
   }
 
-  const hideErrorMessage = () => {
-    markFieldAsValid();
-    const errorElem = <HTMLElement>document.querySelector('.error-msg');
-    if (errorElem.innerHTML.length === 0) return;
+  const markFieldAsInvalid = () => {
+    const label = document.querySelector('label');
+    const input = <HTMLInputElement>document.querySelector(`#${fieldName()}`);
 
-    errorElem.style.display = 'none';
-    errorElem.innerHTML = '';
-
-    sendInputSizeToClient();
+    if (label) setStylesOnElement(label, getStyleFor('labelInvalid'));
+    setStylesOnElement(input, getStyleFor('fieldInvalid'));
   }
 
-  const showErrorMessage = (message:ShowErrorMessage) => {
-    markFieldAsInvalid();
-    const errorElem = <HTMLElement>document.querySelector('.error-msg');
-    if (errorElem.innerHTML.length !== 0) return;
+  const markFieldAsValid = () => {
+    const label = document.querySelector('label');
+    const input = <HTMLInputElement>document.querySelector(`#${fieldName()}`);
 
-    errorElem.innerHTML = message.data.error;
-    errorElem.style.display = 'block';
-
-    sendInputSizeToClient();
+    if (label) setStylesOnElement(label, getStyleFor('label'));
+    setStylesOnElement(input, getStyleFor('field'));
   }
 
   const receivedMessageToMethod = {
@@ -103,8 +91,8 @@ const Field = () => {
       method: sendFieldValueToMainIframe,
       skipOriginCheck: true,
     },
-    SHOW_ERROR_MESSAGE: { method: showErrorMessage },
-    HIDE_ERROR_MESSAGE: { method: hideErrorMessage },
+    MARK_FIELD_AS_INVALID: { method: markFieldAsInvalid },
+    MARK_FIELD_AS_VALID: { method: markFieldAsValid },
   };
 
   const iframesCommunication = IframesCommunication(receivedMessageToMethod);
@@ -199,22 +187,6 @@ const Field = () => {
     };
 
     sendMessageToMainIframe(message);
-  }
-
-  const markFieldAsInvalid = () => {
-    const label = document.querySelector('label');
-    const input = <HTMLInputElement>document.querySelector(`#${fieldName()}`);
-
-    if (label) setStylesOnElement(label, getStyleFor('labelInvalid'));
-    setStylesOnElement(input, getStyleFor('fieldInvalid'));
-  }
-
-  const markFieldAsValid = () => {
-    const label = document.querySelector('label');
-    const input = <HTMLInputElement>document.querySelector(`#${fieldName()}`);
-
-    if (label) setStylesOnElement(label, getStyleFor('label'));
-    setStylesOnElement(input, getStyleFor('field'));
   }
 
   return {

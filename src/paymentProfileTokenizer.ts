@@ -26,7 +26,8 @@ interface Options {
   liveValidation?: boolean;
   fields: {
     [key:string]: Field;
-  }
+  },
+  onLiveValidation?:Function;
 }
 
 interface OnLoadCallback {
@@ -69,6 +70,11 @@ interface ReceivedToken {
   }
 }
 
+interface receivedLiveValidationErrors {
+  action:string;
+  data: []
+}
+
 const PaymentProfileTokenizer = () => {
   let options:Options = { type: '', fields: {} };
 
@@ -77,6 +83,8 @@ const PaymentProfileTokenizer = () => {
   let tokenizeOnSuccess:Function = () => {};
 
   let tokenizeOnError:Function = () => {};
+
+  let onLiveValidation:Function = () => {};
 
   const setIframeSize = (message:SetIframeSize) => {
     const iframe = iframes[message.data.fieldName];
@@ -97,10 +105,15 @@ const PaymentProfileTokenizer = () => {
     tokenizeOnSuccess(message.data.token);
   }
 
+  const receivedLiveValidationErrors = (message:receivedLiveValidationErrors) => {
+    onLiveValidation(message.data);
+  };
+
   const receivedMessageToMethod = {
     INPUT_SIZE: { method: setIframeSize },
     IVALID_FIELDS: { method: invalidFields },
     RECEIVED_TOKEN: { method: receivedToken },
+    LIVE_VALIDATION_RESULTS: { method: receivedLiveValidationErrors },
   };
 
   const iframesCommunication = IframesCommunication(receivedMessageToMethod);
@@ -138,6 +151,7 @@ const PaymentProfileTokenizer = () => {
 
     if (optionsValid) {
       mergeOptionsWithOptionsForType(options);
+      if (options.onLiveValidation) onLiveValidation = options.onLiveValidation;
       sendMessageToMainIframe({ action: 'SET_OPTIONS', data: dataForIframe(mainIframeName) });
       await createFields();
     } else {
