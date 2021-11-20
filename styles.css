@@ -23,7 +23,7 @@ body {
   display: flex;
 }
 
-#last-live-validation-error {
+#errors {
   display: flex;
   align-items: center;
   justify-content: center;

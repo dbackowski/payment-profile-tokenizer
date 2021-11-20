@@ -16,7 +16,7 @@
           <div id="cvc"></div>
         </div>
         <button id="submit">Submit</button>
-        <div id="last-live-validation-error"></div>
+        <div id="errors"></div>
       </div>
     </div>
 
@@ -83,7 +83,7 @@
           },
         },
         onLiveValidation: function(errors) {
-          var elem = document.querySelector('#last-live-validation-error');
+          var elem = document.querySelector('#errors');
 
           if (errors.length === 0) {
             elem.innerHTML = '';
@@ -101,7 +101,14 @@
         lib.tokenize().then((token) => {
           console.log(token);
         }).catch((error) => {
-          console.error(error);
+          var elem = document.querySelector('#errors');
+          if (error.invalidFields.length === 0) {
+            elem.innerHTML = '';
+            return;
+          }
+
+          elem.innerHTML = error.invalidFields[0].errorMessage;
+          console.log(error);
         });
       });
     </script>
