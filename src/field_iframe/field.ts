@@ -129,14 +129,14 @@ const Field = () => {
     const elem = html.output();
 
     if (getInputFormat()) {
-      elem.addEventListener('input', formatInput.bind(this));
+      elem.addEventListener('input', formatInput);
     }
 
-    elem.addEventListener('keyup', sendFieldValueToMainIframe.bind(this));
+    elem.addEventListener('keyup', sendFieldValueToMainIframe);
 
     if (options.fieldOptions?.liveValidation) {
       const input = elem.querySelector('.input');
-      if (input) input.addEventListener('blur', liveValidateField.bind(this));
+      if (input) input.addEventListener('blur', liveValidateField);
     }
 
     document.body.appendChild(elem);
