@@ -55,31 +55,37 @@
             selector: '#first-name',
             placeholder: 'First Name',
             style: style({ field: { minWidth: '500px', borderBottom: '1px solid #cfd7df' } }),
+            tabOrder: 1
           },
           lastName: {
             selector: '#last-name',
             placeholder: 'Last Name',
             style: style({field: { minWidth: '500px', borderBottom: '1px solid #cfd7df' } }),
+            tabOrder: 2
           },
           creditCardNumber: {
             selector: '#credit-card-number',
             placeholder: 'Card Number',
             style: style({ field: { width: '500px', borderBottom: '1px solid #cfd7df' } }),
+            tabOrder: 3
           },
           expirationMonth: {
             selector: '#expiration-month',
             placeholder: 'Expiration Month',
             style: style({ field: { width: '150px', borderBottom: '1px solid #cfd7df' } }),
+            tabOrder: 4
           },
           expirationYear: {
             selector: '#expiration-year',
             placeholder: 'Expiration Year',
             style: style({ field: { marginLeft: '25px', width: '150px', borderBottom: '1px solid #cfd7df' } }),
+            tabOrder: 5
           },
           cvv: {
             selector: '#cvc',
             placeholder: 'CVC',
             style: style({ field: { marginLeft: '25px', width: '150px', borderBottom: '1px solid #cfd7df' } }),
+            tabOrder: 6
           },
         },
         onLiveValidation: function(errors) {

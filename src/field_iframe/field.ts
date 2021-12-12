@@ -82,6 +82,11 @@ const Field = () => {
     setStylesOnElement(input, getStyleFor('field'));
   }
 
+  const setFocus = () => {
+    const input = <HTMLInputElement>document.querySelector(`#${fieldName()}`);
+    input.focus();
+  }
+
   const receivedMessageToMethod = {
     SET_OPTIONS: {
       method: setOptions,
@@ -93,6 +98,7 @@ const Field = () => {
     },
     MARK_FIELD_AS_INVALID: { method: markFieldAsInvalid },
     MARK_FIELD_AS_VALID: { method: markFieldAsValid },
+    SET_FOCUS: { method: setFocus },
   };
 
   const iframesCommunication = IframesCommunication(receivedMessageToMethod);
@@ -133,6 +139,7 @@ const Field = () => {
     }
 
     elem.addEventListener('keyup', sendFieldValueToMainIframe);
+    elem.addEventListener('keydown', changeFocusToAnotherField);
 
     if (options.fieldOptions?.liveValidation) {
       const input = elem.querySelector('.input');
@@ -141,6 +148,19 @@ const Field = () => {
 
     document.body.appendChild(elem);
     sendInputSizeToClient();
+  }
+
+  const changeFocusToAnotherField = (event:KeyboardEvent) => {
+    if (event.key !== 'Tab') return;
+
+    event.preventDefault();
+
+    sendMessageToMainIframe({
+      action: 'TAB_PRESSED',
+      data: {
+        fieldName: fieldName(),
+      }
+    });
   }
 
   const sendInputSizeToClient = () => {

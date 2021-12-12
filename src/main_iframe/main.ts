@@ -27,8 +27,15 @@ interface MessageForLiveValidate {
   }
 }
 
+interface MessageForChangeFocusToAnotherField {
+  action: string;
+  data: {
+    fieldName: string;
+  };
+}
 interface Field {
   validator: string;
+  tabOrder: number;
 }
 
 interface Options {
@@ -83,12 +90,20 @@ const Main = () => {
     }
   }
 
+  const changeFocusToAnotherField = (message:MessageForChangeFocusToAnotherField) => {
+    const fieldsFocusOrder = Object.entries(options.fields).sort((a, b) => a[1].tabOrder - b[1].tabOrder).map((a) => a[0])
+    const index = fieldsFocusOrder.indexOf(message.data.fieldName);
+    const fieldNameToFocus = fieldsFocusOrder[index+1] || fieldsFocusOrder[0];
+    sendMessageToIframe(fieldNameToFocus, { action: 'SET_FOCUS' });
+  }
+
   const receivedMessageToMethod = {
     SET_OPTIONS: { method: setOptions, skipOriginCheck: true },
     FIELD_VALUE: { method: receivedFieldValue },
     LIVE_VALIDATE_FIELD: { method: liveValidateField },
     TOKENIZE: { method: tokenize, skipOriginCheck: true },
-  };
+    TAB_PRESSED: { method: changeFocusToAnotherField },
+  }
 
   const iframesCommunication = IframesCommunication(receivedMessageToMethod);
 
