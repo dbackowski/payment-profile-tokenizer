@@ -161,7 +161,9 @@ const Main = () => {
           return invalidField.fieldName !== result.fieldName
         });
       } else {
-        liveValidationInvalidFields.push({ fieldName: result.fieldName, errorMessage: result.errorMessage });
+        if (!liveValidationInvalidFields.find((invalidField) => invalidField.fieldName === result.fieldName) ) {
+          liveValidationInvalidFields.push({ fieldName: result.fieldName, errorMessage: result.errorMessage });
+        }
       }
     });
 
