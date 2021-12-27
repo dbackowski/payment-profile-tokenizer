@@ -42,7 +42,7 @@ const FIELDS_FOR_TYPES:Fields = {
 
 const fieldsForType = (type:string):Field => FIELDS_FOR_TYPES[type].fields;
 
-const supportedTypes = ():string[] => Object.keys(FIELDS_FOR_TYPES);
+const supportedTypes = Object.keys(FIELDS_FOR_TYPES);
 
 export {
   fieldsForType,
