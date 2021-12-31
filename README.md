@@ -8,6 +8,17 @@ and in the end, return you the token.
 
 ![screenshot](https://i.imgur.com/0nw0eLy.png)
 
+## Usage
+
+Run those commands in the console:
+
+```
+npm install
+npm start
+```
+
+This should open a new tab in your browser (if not you can manually go to http://localhost:4000)
+
 ## License
 
 Released under the MIT License.
