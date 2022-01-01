@@ -5,12 +5,33 @@ interface ValidateResult {
   errorMessage?: string;
 }
 
+interface Field {
+  tabOrder: number;
+}
+
 interface Options {
   type: string;
   fields: {
-    [key:string]: Object;
+    [key:string]: Field;
   }
 }
+
+const tabOrderValidator = (options: Options): ValidateResult => {
+  if (!Object.entries(options.fields).find(([_key, value]) => value.tabOrder)) return { valid: true };
+
+  const notANumberTabOrderField = Object.entries(options.fields).find(([_key, value]) => {
+    return (typeof value.tabOrder !== 'number');
+  });
+
+  if (notANumberTabOrderField) {
+    return {
+      valid: false,
+      errorMessage: `Fieldname: ${notANumberTabOrderField[0]}, tabOrder value: '${notANumberTabOrderField[1].tabOrder}' is not a number`,
+    };
+  }
+
+  return { valid: true };
+};
 
 export const optionsValidator = (options:Options): ValidateResult => {
   if (!options.type) return { valid: false, errorMessage: '`type` can not be empty' };
@@ -32,6 +53,12 @@ export const optionsValidator = (options:Options): ValidateResult => {
       valid: false,
       errorMessage: `Not all requires fields are present in the \`fields\`, missing: ${missingFields.join(', ')}`,
     };
+  }
+
+  const tabOrderValidationResult = tabOrderValidator(options);
+
+  if (!tabOrderValidationResult.valid) {
+    return tabOrderValidationResult;
   }
 
   return { valid: true };
