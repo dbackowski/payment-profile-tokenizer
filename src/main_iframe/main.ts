@@ -1,5 +1,6 @@
 import IframesCommunication from '../shared/IframesCommunication';
 import { inputValidator } from '../shared/inputValidator';
+import { postData } from '../shared/helpers';
 
 interface FieldValues {
   [key:string]: string;
@@ -81,9 +82,12 @@ const Main = () => {
     markInvalidFields(validationResults);
 
     if (allFieldsAreValid(validationResults)) {
-      console.log('here we will send data to the backend'); // eslint-disable-line no-console
-      console.log(fieldsValues); // eslint-disable-line no-console
-      sendMessageToClient({ action: 'RECEIVED_TOKEN', data: { token: 'here will be the token' } });
+      postData('http://localhost:3000', fieldsValues)
+        .then(data => {
+          sendMessageToClient({ action: 'RECEIVED_TOKEN', data: { token: data.token } });
+        }).catch(error => {
+          sendMessageToClient({ action: 'TOKEN_ERROR', data: { error: error.message } });
+        });
     } else {
       sendInvalidFieldsToClient(validationResults);
       console.log('not all fields were filled in'); // eslint-disable-line no-console

@@ -105,8 +105,11 @@
 
       document.querySelector('#submit').addEventListener('click', function() {
         lib.tokenize().then((token) => {
-          console.log(token);
+          console.log('Received token: ' + token);
         }).catch((error) => {
+          console.error(error);
+          if (!error.hasOwnProperty('invalidFields')) return;
+
           var elem = document.querySelector('#errors');
           if (error.invalidFields.length === 0) {
             elem.innerHTML = '';
@@ -114,7 +117,6 @@
           }
 
           elem.innerHTML = error.invalidFields[0].errorMessage;
-          console.log(error);
         });
       });
     </script>

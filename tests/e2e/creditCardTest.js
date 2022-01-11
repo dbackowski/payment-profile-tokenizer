@@ -49,7 +49,7 @@ test('With valid data it should receive token', async (t) => {
   const consoleAfter = await t.getBrowserConsoleMessages();
 
   await t
-    .expect(consoleAfter.log[0]).eql('here will be the token');
+    .expect(consoleAfter.log[0]).eql('token_12345');
 });
 
 test('With invalid data it should show proper error messages', async (t) => {

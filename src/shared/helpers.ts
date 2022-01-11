@@ -90,3 +90,21 @@ export const mergeOptionsWithOptionsForType = (options:Options) => {
     Object.assign(options.fields[key], fields[key])
   });
 };
+
+export const postData = async(url:string = '', data:Object = {}):Promise<any> => {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+
+  const jsonResponse = await response.json();
+
+  if (response.ok) {
+    return jsonResponse
+  } else {
+    throw new Error(jsonResponse.error);
+  }
+};

@@ -70,6 +70,13 @@ interface ReceivedToken {
   }
 }
 
+interface TokenError {
+  action:string;
+  data: {
+    error:string;
+  }
+}
+
 interface receivedLiveValidationErrors {
   action:string;
   data: []
@@ -109,9 +116,14 @@ const PaymentProfileTokenizer = () => {
     onLiveValidation(message.data);
   };
 
+  const tokenError = (message:TokenError) => {
+    tokenizeOnError({ error: message.data.error });
+  };
+
   const receivedMessageToMethod = {
     INPUT_SIZE: { method: setIframeSize },
     IVALID_FIELDS: { method: invalidFields },
+    TOKEN_ERROR: { method: tokenError },
     RECEIVED_TOKEN: { method: receivedToken },
     LIVE_VALIDATION_RESULTS: { method: receivedLiveValidationErrors },
   };

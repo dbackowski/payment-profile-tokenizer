@@ -7,7 +7,9 @@
     "dev": "webpack --mode development",
     "watch": "webpack --watch",
     "start": "webpack serve --port 4000 --open",
+    "pretest": "forever start ./tests/support/fakeApi.js",
     "test": "testcafe -e -u --disable-page-caching --assertion-timeout 20000 --page-load-timeout 60000 --selector-timeout 30000 chrome:headless tests/e2e/*.js -q",
+    "posttest": "forever stop ./tests/support/fakeApi.js",
     "lint": "eslint .",
     "tsc": "tsc"
   },
@@ -35,6 +37,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.12.13",
+    "cors": "^2.8.5",
+    "express": "^4.17.2",
+    "forever": "^4.0.2",
     "source-map-loader": "^2.0.1",
     "ts-loader": "^9.1.1"
   }
