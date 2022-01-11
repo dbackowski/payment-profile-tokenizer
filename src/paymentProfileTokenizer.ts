@@ -19,6 +19,7 @@ interface Field {
   placeholder: string;
   liveValidation: boolean;
   style: object;
+  tabOrder?: number;
 }
 
 interface Options {

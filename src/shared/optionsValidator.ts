@@ -6,7 +6,7 @@ interface ValidateResult {
 }
 
 interface Field {
-  tabOrder: number;
+  tabOrder?: number;
 }
 
 interface Options {
