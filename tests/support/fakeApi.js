@@ -18,5 +18,5 @@ app.post('/', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Fake API listening at http://localhost:${port}`);
+  console.log(`Fake API listening at http://localhost:${port}`); // eslint-disable-line no-console
 });

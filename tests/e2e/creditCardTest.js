@@ -52,6 +52,39 @@ test('With valid data it should receive token', async (t) => {
     .expect(consoleAfter.log[0]).eql('token_12345');
 });
 
+test('With a credit card number that will raise an error on the backend it should write error to the console', async (t) => {
+  await t
+    .switchToIframe(firstNameIframe)
+    .typeText('#firstName', 'John')
+    .switchToMainWindow()
+    .switchToIframe(lastNameIframe)
+    .typeText('#lastName', 'Doe')
+    .switchToMainWindow()
+    .switchToIframe(creditCardNumberIframe)
+    .typeText('#creditCardNumber', '4111111111111111')
+    .switchToMainWindow()
+    .switchToIframe(expirationMonthIframe)
+    .typeText('#expirationMonth', '12')
+    .switchToMainWindow()
+    .switchToIframe(expirationYearIframe)
+    .typeText('#expirationYear', '2025')
+    .switchToMainWindow()
+    .switchToIframe(cvcIframe)
+    .typeText('#cvv', '123')
+    .switchToMainWindow();
+
+  const consoleBefore = await t.getBrowserConsoleMessages();
+
+  await t
+    .expect(consoleBefore.error.length).eql(0)
+    .click('#submit');
+
+  const consoleAfter = await t.getBrowserConsoleMessages();
+
+  await t
+    .expect(consoleAfter.error[0]).eql('Something went wrong');
+});
+
 test('With invalid data it should show proper error messages', async (t) => {
   await t
     .click('#submit')
