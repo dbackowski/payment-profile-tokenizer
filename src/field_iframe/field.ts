@@ -65,6 +65,7 @@ const Field = () => {
     };
 
     sendMessageToMainIframe(message);
+    markFieldAsValid();
   }
 
   const markFieldAsInvalid = () => {
