@@ -1,9 +1,10 @@
-import { setStylesOnElement } from './helpers';
+import { setStylesOnElement } from './styleElement';
 
 interface Option {
   value:string;
   text:string;
 }
+
 interface Options {
   fieldLabel: string;
   type: string;

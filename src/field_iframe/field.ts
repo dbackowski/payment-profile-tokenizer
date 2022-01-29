@@ -1,7 +1,8 @@
 import IframesCommunication from '../shared/IframesCommunication';
 import InputHtmlGenerator from '../shared/inputHtmlGenerator';
 import InputFormatter from '../shared/inputFormatter';
-import { mainIframeName, setStylesOnElement } from '../shared/helpers';
+import { mainIframeName } from '../shared/helpers';
+import { setStylesOnElement } from '../shared/styleElement';
 
 enum StyleKeys {
   label = 'label',

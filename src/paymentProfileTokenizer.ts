@@ -2,12 +2,12 @@ import IframesCommunication from './shared/IframesCommunication';
 import {
   mainIframeName,
   allowedIframeOrigins,
-  setStylesOnElement,
   createIframe,
   getHostOrigin,
   mergeOptionsWithOptionsForType,
 } from './shared/helpers';
 import { optionsValidator } from './shared/optionsValidator';
+import { setStylesOnElement } from './shared/styleElement';
 
 interface Iframes {
   [key:string]: HTMLIFrameElement;

@@ -1,4 +1,5 @@
 import { fieldsForType } from './fieldsForType';
+import { setStylesOnElement } from './styleElement';
 
 interface OnLoadCallback {
   (iframe: HTMLIFrameElement): void;
@@ -33,10 +34,6 @@ export const mainIframeName = 'mainIframe';
 export const allowedIframeOrigins = [
   'http://localhost:4000',
 ];
-
-export const setStylesOnElement = (element:HTMLElement, styles:object) => {
-  Object.assign(element.style, styles);
-};
 
 export const createIframe = (options:IframeOptions): Promise<string> => new Promise((resolve, reject) => {
   if (!options.elementToAppendIframeTo) return reject('Element to append iframe to does not exists');
