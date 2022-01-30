@@ -160,14 +160,12 @@ const Main = () => {
 
   const sendLiveInvalidFieldsToClient = (validationResults:ValidationResult[]) => {
     validationResults.forEach((result) => {
-      if (result.valid) {
-        liveValidationInvalidFields = liveValidationInvalidFields.filter(invalidField => {
-          return invalidField.fieldName !== result.fieldName
-        });
-      } else {
-        if (!liveValidationInvalidFields.find((invalidField) => invalidField.fieldName === result.fieldName) ) {
-          liveValidationInvalidFields.push({ fieldName: result.fieldName, errorMessage: result.errorMessage });
-        }
+      liveValidationInvalidFields = liveValidationInvalidFields.filter(invalidField => {
+        return invalidField.fieldName !== result.fieldName
+      });
+
+      if (!result.valid) {
+        liveValidationInvalidFields.push({ fieldName: result.fieldName, errorMessage: result.errorMessage });
       }
     });
 
