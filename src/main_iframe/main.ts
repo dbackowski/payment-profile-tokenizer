@@ -90,7 +90,6 @@ const Main = () => {
         });
     } else {
       sendInvalidFieldsToClient(validationResults);
-      console.log('not all fields were filled in'); // eslint-disable-line no-console
     }
   }
 
