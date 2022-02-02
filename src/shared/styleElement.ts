@@ -1,13 +1,3 @@
-export const setStylesOnElement = (element:HTMLElement, styles:object) => {
-  Object.entries(styles).forEach(([selector, values]) => {
-    if (isPseudoClassOrElem(selector)) {
-      addInternalStyleToPage(element, selector, values);
-    } else {
-      element.style[selector] = values
-    }
-  })
-};
-
 const isPseudoClassOrElem = (style:string) => style.startsWith(':');
 
 const addInternalStyleToPage = (element:HTMLElement, selector:string, values:object) => {
@@ -30,4 +20,15 @@ const convertCssObjectToText = (cssObject:object) => {
 
 const convertNameFromCssObject = (name:string) => {
   return name.split(/(?=[A-Z])/).join('-').toLowerCase();
+};
+
+export const setStylesOnElement = (element:HTMLElement, styles:object) => {
+  Object.entries(styles).forEach(([selector, values]) => {
+    if (isPseudoClassOrElem(selector)) {
+      addInternalStyleToPage(element, selector, values);
+    } else {
+      // TODO: refactor
+      (<any>element.style)[selector] = values;
+    }
+  })
 };
