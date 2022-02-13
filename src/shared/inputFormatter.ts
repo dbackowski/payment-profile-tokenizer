@@ -7,18 +7,18 @@ interface FormatResult {
   carretPosition: HTMLInputElement["selectionStart"];
 }
 
-const creditCardFormat = (element:HTMLInputElement, carretPosition:number):FormatResult => {
+const creditCardFormat = (element:HTMLInputElement, caretPos:number):FormatResult => {
   const value = element.value.replace(new RegExp(/[^\d]/, 'ig'), '')
     .slice(0, 16)
     .split(/([0-9]{4})/g)
     .filter((e) => e !== '')
     .join(' ');
 
-  if (carretPosition && carretPosition % 5 === 0) {
-    carretPosition += 1;
+  if (caretPos && caretPos % 5 === 0) {
+    caretPos += 1;
   }
 
-  return { value, carretPosition };
+  return { value, carretPosition: caretPos };
 }
 
 const monthFormat = (element:HTMLInputElement, carretPosition:number):FormatResult => {
