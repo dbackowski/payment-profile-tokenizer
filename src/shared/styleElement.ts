@@ -27,8 +27,7 @@ export const setStylesOnElement = (element:HTMLElement, styles:object) => {
     if (isPseudoClassOrElem(selector)) {
       addInternalStyleToPage(element, selector, values);
     } else {
-      // TODO: refactor
-      (<any>element.style)[selector] = values;
+      Object.assign(element.style, styles);
     }
   })
 };
