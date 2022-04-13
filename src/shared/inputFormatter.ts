@@ -14,7 +14,9 @@ const creditCardFormat = (element:HTMLInputElement, caretPos:number):FormatResul
     .filter((e) => e !== '')
     .join(' ');
 
-  if (caretPos && caretPos % 5 === 0) {
+  if (caretPos == element.value.length) {
+    caretPos = value.length;
+  } else if (caretPos && caretPos % 5 === 0) {
     caretPos += 1;
   }
 
