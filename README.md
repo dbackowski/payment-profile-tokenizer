@@ -1,4 +1,4 @@
-# Payment-Profile-Tokenizer
+# Payment-Profile-Tokenizer ![Lint](https://github.com/dbackowski/payment-profile-tokenizer/actions/workflows/lint.yml/badge.svg) ![End-to-End Tests](https://github.com/dbackowski/payment-profile-tokenizer/actions/workflows/testcafe-workflow.yml/badge.svg)
 
 This is just a proof of concept version of the JS library to tokenize credit cards, similar to eg. Stripe's elements
 library https://stripe.com/en-gb-pl/payments/elements
