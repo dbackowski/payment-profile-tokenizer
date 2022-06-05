@@ -8,6 +8,8 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v1
+      - name: Npm install
+        run: npm install
       - name: Run pretest
         run: npm run pretest
       - uses: DevExpress/testcafe-action@latest
