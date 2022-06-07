@@ -14,4 +14,4 @@ jobs:
         run: npm run start-in-bg
       - uses: DevExpress/testcafe-action@latest
         with:
-          args: "chrome tests"
+          args: "chrome:headless tests"
