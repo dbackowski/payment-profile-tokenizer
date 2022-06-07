@@ -11,7 +11,7 @@ jobs:
       - name: Npm install
         run: npm install
       - name: Run pretest
-        run: npm run preteet
+        run: npm run pretest
       - uses: DevExpress/testcafe-action@latest
         with:
           args: "chrome tests"
