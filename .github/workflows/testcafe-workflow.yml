@@ -8,6 +8,9 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v1
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
       - name: Npm install
         run: npm install
       - uses: DevExpress/testcafe-action@latest
