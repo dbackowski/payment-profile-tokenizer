@@ -1,6 +1,6 @@
 import IframesCommunication from './shared/IframesCommunication';
 import {
-  mainIframeName,
+  generateMainIframeName,
   allowedIframeOrigins,
   createIframe,
   getHostOrigin,
@@ -94,6 +94,8 @@ const PaymentProfileTokenizer = () => {
 
   let onLiveValidation:Function = () => {};
 
+  let mainIframeName:string;
+
   const setIframeSize = (message:SetIframeSize) => {
     const iframe = iframes[message.data.fieldName];
 
@@ -152,6 +154,7 @@ const PaymentProfileTokenizer = () => {
 
     options = opt;
     originForIframes = getOriginForIframes();
+    mainIframeName = generateMainIframeName();
 
     if (!originForIframes) return;
 
@@ -219,7 +222,7 @@ const PaymentProfileTokenizer = () => {
   const dataForIframe = (fieldName:string) => {
     return fieldNameIsMainIframe(fieldName)
       ? { fields: options.fields, hostOrigin: getHostOrigin() }
-      : { fieldName, fieldOptions: options.fields[fieldName], hostOrigin: getHostOrigin() };
+      : { fieldName, fieldOptions: options.fields[fieldName], hostOrigin: getHostOrigin(), mainIframeName };
   };
 
   const stylesForIframe = (fieldName:string): object => {
