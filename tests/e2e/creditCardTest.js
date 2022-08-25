@@ -9,7 +9,7 @@ let expirationYearIframe;
 let cvcIframe;
 
 fixture('Credit Card Test')
-  .page('http://localhost:4000/tests/examples/credit-card.html')
+  .page('http://127.0.0.1:4000/tests/examples/credit-card.html')
   .beforeEach(async () => {
     firstNameIframe = await Selector('#first-name').find('iframe');
     lastNameIframe = await Selector('#last-name').find('iframe');

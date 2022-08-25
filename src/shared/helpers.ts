@@ -34,6 +34,7 @@ export const generateMainIframeName = () =>
 
 export const allowedIframeOrigins = [
   'http://localhost:4000',
+  'http://127.0.0.1:4000',
 ];
 
 export const createIframe = (options:IframeOptions): Promise<string> => new Promise((resolve, reject) => {
