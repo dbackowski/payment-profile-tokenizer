@@ -1,8 +1,8 @@
-interface AvailableForms {
+type AvailableForms = {
   [key:string]: Function;
 }
 
-interface FormatResult {
+type FormatResult = {
   value: string;
   carretPosition: HTMLInputElement["selectionStart"];
 }

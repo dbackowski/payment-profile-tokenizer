@@ -9,11 +9,11 @@ import {
 import { optionsValidator } from './shared/optionsValidator';
 import { setStylesOnElement } from './shared/styleElement';
 
-interface Iframes {
+type Iframes = {
   [key:string]: HTMLIFrameElement;
 }
 
-interface Field {
+type Field = {
   selector: string;
   label: string;
   placeholder: string;
@@ -22,7 +22,7 @@ interface Field {
   tabOrder?: number;
 }
 
-interface Options {
+type Options = {
   type: string;
   liveValidation?: boolean;
   fields: {
@@ -31,11 +31,11 @@ interface Options {
   onLiveValidation?:Function;
 }
 
-interface OnLoadCallback {
+type OnLoadCallback = {
   (iframe: HTMLIFrameElement): void;
 }
 
-interface OptionsForIframe {
+type OptionsForIframe = {
   fieldName:string;
   elementToAppendIframeTo: HTMLElement|null;
   src:string;
@@ -43,12 +43,12 @@ interface OptionsForIframe {
   styles:object;
 }
 
-interface SendMessageToIframe {
+type SendMessageToIframe = {
   action:string;
   data?:object;
 }
 
-interface SetIframeSize {
+type SetIframeSize = {
   action:string;
   data: {
     fieldName:string;
@@ -57,28 +57,28 @@ interface SetIframeSize {
   }
 }
 
-interface InvalidFields {
+type InvalidFields = {
   action:string;
   data: {
     invalidFields:string[];
   }
 }
 
-interface ReceivedToken {
+type ReceivedToken = {
   action:string;
   data: {
     token:string;
   }
 }
 
-interface TokenError {
+type TokenError = {
   action:string;
   data: {
     error:string;
   }
 }
 
-interface receivedLiveValidationErrors {
+type receivedLiveValidationErrors = {
   action:string;
   data: []
 }

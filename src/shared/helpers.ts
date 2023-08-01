@@ -1,11 +1,11 @@
 import { fieldsForType } from './fieldsForType';
 import { setStylesOnElement } from './styleElement';
 
-interface OnLoadCallback {
+type OnLoadCallback = {
   (iframe: HTMLIFrameElement): void;
 }
 
-interface IframeOptions {
+type IframeOptions = {
   src: string;
   fieldName: string;
   styles: object;
@@ -13,7 +13,7 @@ interface IframeOptions {
   elementToAppendIframeTo: HTMLElement|null;
 }
 
-interface Field {
+type Field = {
   selector: string;
   label: string;
   placeholder?: string;
@@ -21,7 +21,7 @@ interface Field {
   liveValidation: boolean;
 }
 
-interface Options {
+type Options = {
   type: string;
   liveValidation?: boolean;
   fields: {

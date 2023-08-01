@@ -12,7 +12,8 @@ enum StyleKeys {
 }
 
 type elementForStyle = 'label'|'labelInvalid'|'field'|'fieldInvalid';
-interface FieldOption {
+
+type FieldOption = {
   style: {
     [key in StyleKeys]: object;
   };
@@ -24,18 +25,18 @@ interface FieldOption {
   options: OptionsForSelect[];
 }
 
-interface Options {
+type Options = {
   fieldName?: string;
   fieldOptions?: FieldOption;
   hostOrigin?: string;
 }
 
-interface OptionsForSelect {
+type OptionsForSelect = {
   value:string;
   text:string;
 }
 
-interface OptionsForHtmlGenerator {
+type OptionsForHtmlGenerator = {
   fieldLabel: string;
   type: string;
   options?: OptionsForSelect[];

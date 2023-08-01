@@ -1,11 +1,11 @@
 import { setStylesOnElement } from './styleElement';
 
-interface Option {
+type Option = {
   value:string;
   text:string;
 }
 
-interface Options {
+type Options = {
   fieldLabel: string;
   type: string;
   placeholder: string;
@@ -16,7 +16,7 @@ interface Options {
   };
 }
 
-interface InputTypes {
+type InputTypes = {
   [key: string]: Function;
 }
 

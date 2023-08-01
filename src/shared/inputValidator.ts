@@ -1,18 +1,18 @@
 import { lunCheck } from './helpers';
 
-interface FieldValues {
+type FieldValues = {
   [key:string]: string;
 }
 
-interface AvailableValidators {
+type AvailableValidators = {
   [key:string]: Function;
 }
 
-interface ErrorMessages {
+type ErrorMessages = {
   [key:string]: string;
 }
 
-interface ValidationResult {
+type ValidationResult = {
   valid: boolean;
   errorMessage: string;
 }

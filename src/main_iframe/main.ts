@@ -2,57 +2,58 @@ import IframesCommunication from '../shared/IframesCommunication';
 import { inputValidator } from '../shared/inputValidator';
 import { postData } from '../shared/helpers';
 
-interface FieldValues {
+type FieldValues = {
   [key:string]: string;
 }
 
-interface FieldValueData {
+type FieldValueData = {
   fieldName: string;
   value: string;
 }
 
-interface MessageForFieldValue {
+type MessageForFieldValue = {
   action: string;
   data: FieldValueData;
 }
 
-interface MessageForOptions {
+type MessageForOptions = {
   action: string;
   data: Options;
 }
 
-interface MessageForLiveValidate {
+type MessageForLiveValidate = {
   action: string;
   data: {
     fieldName: string;
   }
 }
 
-interface MessageForChangeFocusToAnotherField {
+type MessageForChangeFocusToAnotherField = {
   action: string;
   data: {
     fieldName: string;
   };
 }
-interface Field {
+
+type Field = {
   validator: string;
   tabOrder: number;
 }
 
-interface Options {
+type Options = {
   fields: {
     [key:string]: Field
   };
   hostOrigin: string;
 }
 
-interface ValidationResult {
+type ValidationResult = {
   fieldName: string;
   valid: boolean;
   errorMessage: string;
 }
 
-interface liveValidationInvalidFields {
+type liveValidationInvalidFields = {
   fieldName: string;
   errorMessage: string;
 }

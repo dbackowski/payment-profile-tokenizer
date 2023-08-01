@@ -1,11 +1,11 @@
-interface Field {
+type Field = {
   [key:string]: {
     validator?: string;
     inputFormat? :string;
   }
 }
 
-interface Fields {
+type Fields = {
   [key:string]: {
     [fields:string]: Field;
   }

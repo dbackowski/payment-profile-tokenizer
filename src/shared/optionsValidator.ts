@@ -1,15 +1,15 @@
 import { fieldsForType, supportedTypes } from './fieldsForType';
 
-interface ValidateResult {
+type ValidateResult = {
   valid: boolean;
   errorMessage?: string;
 }
 
-interface Field {
+type Field = {
   tabOrder?: number;
 }
 
-interface Options {
+type Options = {
   type: string;
   fields: {
     [key:string]: Field;

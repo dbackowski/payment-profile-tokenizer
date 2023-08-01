@@ -1,19 +1,19 @@
 import { allowedIframeOrigins } from './helpers';
 
-interface ReferenceForHandleReceivedMessage {
+type ReferenceForHandleReceivedMessage = {
   (event:MessageEvent): void;
 }
 
-interface Message {
+type Message = {
   action: string;
   data: object;
 }
 
-interface ReceivedMessageToMethod {
+type ReceivedMessageToMethod = {
   [key:string]: MessageToMethod
 }
 
-interface MessageToMethod {
+type MessageToMethod = {
   method?: Function;
   skipOriginCheck?: boolean;
 }
