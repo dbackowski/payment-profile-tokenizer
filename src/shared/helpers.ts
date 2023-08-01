@@ -29,10 +29,12 @@ type Options = {
   }
 }
 
-export const mainIframeName = 'mainIframe';
+export const generateMainIframeName = () =>
+  `mainIframe%${[...Array(30)].map(() => Math.random().toString(36)[2] || '0').join('')}`;
 
 export const allowedIframeOrigins = [
   'http://localhost:4000',
+  'http://127.0.0.1:4000',
 ];
 
 export const createIframe = (options:IframeOptions): Promise<string> => new Promise((resolve, reject) => {

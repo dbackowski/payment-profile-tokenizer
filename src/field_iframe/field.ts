@@ -1,7 +1,6 @@
 import IframesCommunication from '../shared/IframesCommunication';
 import InputHtmlGenerator from '../shared/inputHtmlGenerator';
 import InputFormatter from '../shared/inputFormatter';
-import { mainIframeName } from '../shared/helpers';
 import { setStylesOnElement } from '../shared/styleElement';
 
 enum StyleKeys {
@@ -26,9 +25,10 @@ type FieldOption = {
 }
 
 type Options = {
-  fieldName?: string;
-  fieldOptions?: FieldOption;
-  hostOrigin?: string;
+  fieldName: string;
+  fieldOptions: FieldOption;
+  hostOrigin: string;
+  mainIframeName: string;
 }
 
 type OptionsForSelect = {
@@ -48,7 +48,7 @@ type OptionsForHtmlGenerator = {
 }
 
 const Field = () => {
-  let options:Options = { };
+  let options:Options;
 
   const setOptions = (message: any) => {
     options = message.data;
@@ -186,7 +186,7 @@ const Field = () => {
   const sendMessageToMainIframe = (message: any) => {
     if (!window.top) return;
 
-    const mainIframe = window.top.frames[mainIframeName as any];
+    const mainIframe = window.top.frames[options.mainIframeName as any];
     if (mainIframe.origin !== options.hostOrigin) return;
 
     mainIframe.postMessage(message, options.hostOrigin);

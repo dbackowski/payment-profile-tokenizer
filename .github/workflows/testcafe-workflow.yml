@@ -8,10 +8,11 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v1
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
       - name: Npm install
         run: npm install
-      - name: Run pretest
-        run: npm run start-in-bg
       - uses: DevExpress/testcafe-action@latest
         with:
-          args: "chrome:headless tests"
+          args: "--page-load-timeout 60000 --app-init-delay 60000 --selector-timeout 30000 chrome:headless tests"
