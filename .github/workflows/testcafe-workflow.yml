@@ -15,4 +15,4 @@ jobs:
         run: npm install
       - uses: DevExpress/testcafe-action@latest
         with:
-          args: "--page-load-timeout 60000 --app-init-delay 60000 --selector-timeout 30000 --app \"webpack serve --port 4000\" chrome:headless tests"
+          args: "--page-load-timeout 60000 --app-init-delay 60000 --selector-timeout 30000 --app \"npm run pretest\" chrome:headless tests"
