@@ -17,4 +17,4 @@ jobs:
       - name: Run TestCafe E2E Tests
         uses: DevExpress/testcafe-action@latest
         with:
-          args: "--page-load-timeout 60000 --selector-timeout 30000 --app 'npm run pretest' --retry-test-pages chrome:headless tests"
+          args: "--page-load-timeout 60000 --selector-timeout 30000 --app 'npm run pretest' chrome:headless tests"
